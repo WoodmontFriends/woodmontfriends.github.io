@@ -1,6 +1,6 @@
 # Friends of Woodmont Park
 
-Coming-soon website for **Friends of Woodmont Park**, a new community nonprofit serving the Woodmont neighborhood of North Chesterfield, Virginia.
+Website for **Friends of Woodmont Park**, a new community nonprofit serving the Woodmont neighborhood of North Chesterfield, Virginia.
 
 🌳 **Live**: https://woodmontfriends.github.io
 
@@ -17,4 +17,17 @@ We work alongside — and are grateful for — our community partners:
 
 ## Development
 
-Plain HTML/CSS — no build step. Edit `index.html`, push to `main`, and GitHub Pages deploys automatically.
+Nuxt 3 + [Content Wind](https://content-wind.nuxt.space) (@nuxt/content v2) — content lives in Markdown under `content/`.
+
+```bash
+yarn install    # deps
+yarn dev        # local dev server
+yarn generate   # static build → ./dist
+```
+
+Pushing to `main` deploys to GitHub Pages via Actions; PRs get a build check (`.github/workflows/nuxtjs.yml`).
+
+### Editing content
+
+- Home page: `content/1.index.md`
+- MDC components available in Markdown: `::hero`, `::card-grid` + `::info-card{title="..."}` (see `components/content/`)

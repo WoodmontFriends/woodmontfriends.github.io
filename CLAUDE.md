@@ -1,6 +1,6 @@
 # Friends of Woodmont Park — Claude Code Context
 
-Website and project space for **Friends of Woodmont Park (FWP)**, a Virginia nonstock corporation (incorporated April 22, 2026) serving the Woodmont neighborhood and surrounding area of North Chesterfield, VA. Currently a single-page static "coming soon" site on GitHub Pages.
+Website and project space for **Friends of Woodmont Park (FWP)**, a Virginia nonstock corporation (incorporated April 22, 2026) serving the Woodmont neighborhood and surrounding area of North Chesterfield, VA. Markdown-driven static site (Nuxt 3) deployed to GitHub Pages via Actions.
 
 - **Live**: https://woodmontfriends.github.io · **GitHub org**: https://github.com/WoodmontFriends
 - **501(c)(3) status**: applied / pending — do NOT describe donations as tax-deductible until confirmed.
@@ -36,9 +36,23 @@ Restore the old tennis courts behind the WRA pool into a **multi-use sport court
 
 ## Stack & deploy
 
-Plain HTML/CSS, no build step. `index.html` is the whole site. Merging to `main` deploys via GitHub Pages (org pages repo — no workflow needed).
+Nuxt 3 + Content Wind (@nuxt/content v2, Markdown + MDC) + TailwindCSS + Pinceau (primary: emerald) · Yarn. Same stack family as the WCA site (`~/repos/woodmont-civic.github.io`) but intentionally leaner — no PWA/GA/SEO modules yet.
 
-Roadmap: single-page static site → SPA with an admin backend (stack TBD; Nuxt 3 is the house pattern from WCA). When that work starts, this file gets updated.
+```bash
+yarn install    # deps
+yarn dev        # local dev server — start with run_in_background: true
+yarn generate   # static build → ./dist
+```
+
+`.github/workflows/nuxtjs.yml` (mirrored from WCA): PRs against `main` get a build check; pushes to `main` deploy to GitHub Pages via Actions (Pages source must be set to "GitHub Actions").
+
+## Editing content
+
+- Home page: `content/1.index.md` — frontmatter `navigation.title` / `layout` / `title` / `description` (WCA conventions).
+- MDC components in `components/content/`: `::hero` (green banner, `badge` prop), `::card-grid` + `::info-card{title="..."}`.
+- Design tokens: `tokens.config.ts` (Pinceau, primary emerald). Site title/socials: `app.config.ts`.
+
+Roadmap: add an admin backend for content management (stack TBD).
 
 ## Google Drive (private)
 
