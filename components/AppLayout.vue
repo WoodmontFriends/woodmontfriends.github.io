@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { cover, email } = useAppConfig()
+const { cover, signupUrl } = useAppConfig()
 const year = new Date().getFullYear()
 </script>
 
@@ -15,7 +15,7 @@ const year = new Date().getFullYear()
           <span class="blaze" aria-hidden="true" />
           <span>Friends of Woodmont Park</span>
         </NuxtLink>
-        <a class="header-email" :href="`mailto:${email}`">Email us</a>
+        <a class="header-link" :href="signupUrl">Get updates</a>
       </div>
     </header>
 
@@ -34,7 +34,7 @@ const year = new Date().getFullYear()
             A Virginia nonstock corporation serving the Woodmont neighborhood of North Chesterfield, VA.
             Our 501(c)(3) application is pending, so donations are not yet tax-deductible.
           </p>
-          <p><a :href="`mailto:${email}`">{{ email }}</a></p>
+          <p><EmailAddress /></p>
         </div>
         <div class="footer-partners">
           <h2 class="footer-heading">Community partners</h2>
@@ -87,7 +87,7 @@ const year = new Date().getFullYear()
   font-size: 1.15rem;
   text-decoration: none;
 }
-.header-email {
+.header-link {
   color: var(--on-dark);
   font-weight: 600;
   font-size: 0.95rem;
