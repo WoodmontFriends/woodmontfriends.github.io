@@ -1,5 +1,10 @@
 export default defineNuxtConfig({
   extends: 'content-wind',
+  css: ['~/assets/css/park.css'],
+  colorMode: {
+    preference: 'light',
+    fallback: 'light',
+  },
   nitro: {
     prerender: {
       failOnError: false,
@@ -11,11 +16,15 @@ export default defineNuxtConfig({
         lang: 'en',
       },
       meta: [
+        { name: 'theme-color', content: '#1f3a2e' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { name: 'description', content: 'Friends of Woodmont Park is a new nonprofit dedicated to preserving, protecting, and promoting quality of life in the Woodmont neighborhood of North Chesterfield, Virginia.' },
       ],
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
+        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&family=Zilla+Slab:wght@500;600;700&display=swap' },
       ],
       script: [
         {
