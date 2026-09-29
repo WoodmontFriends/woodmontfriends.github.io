@@ -50,9 +50,16 @@ yarn generate   # static build → ./dist
 
 ## Editing content
 
-- Home page: `content/1.index.md` — frontmatter `navigation.title` / `layout` / `title` / `description` (WCA conventions).
-- MDC components in `components/content/`: `::hero` (green banner, `badge` prop), `::card-grid` + `::info-card{title="..."}`.
-- Design tokens: `tokens.config.ts` (Pinceau, primary emerald). Site title/socials: `app.config.ts`.
+- Home page: `content/1.index.md` — frontmatter `navigation.title` / `layout` / `title` / `description` (WCA conventions). Each band of the page is an MDC component, so copy edits stay in Markdown:
+  - `::park-hero{primary-label primary-href secondary-label secondary-href}` — dark hero with the name lockup; body is the tagline.
+  - `::page-section{id title tone="paper|fern"}` — a titled section; optional `#aside` slot for a right-hand column (used for `::mission-quote`).
+  - `::event-list` > `::event-item{month day weekday title}` — date-block events.
+  - `::trail` > `::trail-stop{title}` — the phased plan, drawn as a trail with blaze markers. Only for content that really is a sequence.
+  - `::help-list` > `::help-item{title}` — two-column list of ways to help.
+  - `::contact-band{title}` — dark email call-to-action; the address comes from `email` in `app.config.ts`.
+- Site shell: `components/AppLayout.vue` (header + footer) and `layouts/default.vue` override the Content Wind theme's blog chrome.
+- Design: tokens and base styles in `assets/css/park.css`. Hemlock green `#1f3a2e`, blaze yellow `#f2c230` (the only accent: logo mark, main buttons, trail markers), fern tint `#eef3ec`. Zilla Slab headings and Public Sans body text, loaded from Google Fonts in `nuxt.config.ts`. Light mode only.
+- Preview: `yarn generate`, then serve `dist/` (e.g. `python3 -m http.server` inside it). `yarn dev` has shown Nuxt's welcome page instead of the site.
 
 Roadmap: add an admin backend for content management (stack TBD).
 
