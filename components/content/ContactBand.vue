@@ -3,7 +3,7 @@ defineProps({
   id: { type: String, default: 'contact' },
   title: { type: String, required: true },
 })
-const { email } = useAppConfig()
+const { signupUrl } = useAppConfig()
 </script>
 
 <template>
@@ -13,7 +13,8 @@ const { email } = useAppConfig()
       <div class="band-body">
         <ContentSlot :use="$slots.default" unwrap="p" />
       </div>
-      <a class="btn btn-blaze" :href="`mailto:${email}`">Email {{ email }}</a>
+      <a class="btn btn-blaze" :href="signupUrl">Sign up for updates</a>
+      <p class="band-email">Or email us at <EmailAddress /></p>
     </div>
   </section>
 </template>
@@ -38,7 +39,11 @@ const { email } = useAppConfig()
   font-size: 1.1rem;
   color: var(--on-dark-soft);
 }
-.btn {
-  overflow-wrap: anywhere;
+.band-email {
+  margin: 1.5rem 0 0;
+  color: var(--on-dark-soft);
+}
+.band-email :deep(a) {
+  color: var(--on-dark);
 }
 </style>

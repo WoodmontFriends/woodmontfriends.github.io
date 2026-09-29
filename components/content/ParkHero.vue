@@ -1,10 +1,15 @@
 <script setup lang="ts">
-defineProps({
+const props = defineProps({
   primaryLabel: { type: String, default: '' },
   primaryHref: { type: String, default: '' },
   secondaryLabel: { type: String, default: '' },
   secondaryHref: { type: String, default: '' },
 })
+// "signup" resolves to the sign-up form URL in app.config.ts
+const { signupUrl } = useAppConfig()
+const resolve = (href: string) => (href === 'signup' ? signupUrl : href)
+const primary = computed(() => resolve(props.primaryHref))
+const secondary = computed(() => resolve(props.secondaryHref))
 </script>
 
 <template>
@@ -16,8 +21,8 @@ defineProps({
       </h1>
       <p class="tagline"><ContentSlot :use="$slots.default" unwrap="p" /></p>
       <div v-if="primaryLabel || secondaryLabel" class="actions">
-        <a v-if="primaryLabel" :href="primaryHref" class="btn btn-blaze">{{ primaryLabel }}</a>
-        <a v-if="secondaryLabel" :href="secondaryHref" class="btn btn-ghost">{{ secondaryLabel }}</a>
+        <a v-if="primaryLabel" :href="primary" class="btn btn-blaze">{{ primaryLabel }}</a>
+        <a v-if="secondaryLabel" :href="secondary" class="btn btn-ghost">{{ secondaryLabel }}</a>
       </div>
     </div>
   </section>
