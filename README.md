@@ -2,7 +2,7 @@
 
 Website for **Friends of Woodmont Park**, a new community nonprofit serving the Woodmont neighborhood of North Chesterfield, Virginia.
 
-🌳 **Live**: https://woodmontfriends.github.io
+🌳 **Live**: https://woodmontfriends.org
 
 ## About the organization
 

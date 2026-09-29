@@ -25,7 +25,7 @@ export default defineNuxtConfig({
             '@type': 'NGO',
             name: 'Friends of Woodmont Park',
             alternateName: 'FWP',
-            url: 'https://woodmontfriends.github.io',
+            url: 'https://woodmontfriends.org',
             description: 'A Virginia nonprofit corporation preserving, protecting, and promoting quality of life in the Woodmont neighborhood of North Chesterfield, VA through sustainable improvements and collective community effort.',
             nonprofitStatus: 'NonprofitType',
             areaServed: {
