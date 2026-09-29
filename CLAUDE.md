@@ -2,7 +2,7 @@
 
 Website and project space for **Friends of Woodmont Park (FWP)**, a Virginia nonstock corporation (incorporated April 22, 2026) serving the Woodmont neighborhood and surrounding area of North Chesterfield, VA. Markdown-driven static site (Nuxt 3) deployed to GitHub Pages via Actions.
 
-- **Live**: https://woodmontfriends.github.io · **GitHub org**: https://github.com/WoodmontFriends
+- **Live**: https://woodmontfriends.org (also woodmontfriends.github.io) · **GitHub org**: https://github.com/WoodmontFriends
 - **501(c)(3) status**: applied / pending — do NOT describe donations as tax-deductible until confirmed.
 
 ## Mission (verbatim from the Articles of Incorporation)
@@ -11,7 +11,7 @@ Website and project space for **Friends of Woodmont Park (FWP)**, a Virginia non
 
 ## Who you're working with
 
-The user (Gabe) is a founding director of FWP and **President of the Woodmont Civic Association**. FWP's board has five founding directors: Max (President), Gabe, Andrew, Peter, Christina. Weekly virtual stand-ups: Wednesdays 3:30 PM.
+The user (Gabe) is a founding director of FWP and **President of the Woodmont Civic Association**. FWP's board has five founding directors: Max (President), Gabe (Treasurer), Christina (Secretary), Andrew and Peter (at-large). Weekly virtual meetings: Fridays 4 PM (Google Meet).
 
 Apply the same lens as WCA work — welcoming, professional, optimistic; "how does this help our neighbors?"; don't over-engineer (volunteer-run org); spelling/grammar must be perfect on anything public.
 
@@ -45,6 +45,8 @@ yarn generate   # static build → ./dist
 ```
 
 `.github/workflows/nuxtjs.yml` (mirrored from WCA): PRs against `main` get a build check; pushes to `main` deploy to GitHub Pages via Actions (Pages source must be set to "GitHub Actions").
+
+**Domain**: `woodmontfriends.org` was bought through Google Workspace and is registered with Squarespace Domains, which also hosts DNS. The apex has GitHub Pages A records and `www` is a CNAME to `woodmontfriends.github.io`. The custom domain is set in the repo's Pages settings (no `CNAME` file, since the site deploys via Actions). Keep the Google Workspace MX and SPF records intact. The Squarespace account was created under `treasurer@woodmontfriends.org`, which was later renamed to `admin@`.
 
 ## Editing content
 
