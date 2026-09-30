@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { cover, signupUrl } = useAppConfig()
+const { cover, signupUrl, roadmapUrl } = useAppConfig()
 const year = new Date().getFullYear()
 </script>
 
@@ -35,6 +35,7 @@ const year = new Date().getFullYear()
             Our 501(c)(3) application is pending, so donations are not yet tax-deductible.
           </p>
           <p><EmailAddress /></p>
+          <p><a :href="roadmapUrl">See our community roadmap</a></p>
         </div>
         <div class="footer-partners">
           <h2 class="footer-heading">Community partners</h2>
