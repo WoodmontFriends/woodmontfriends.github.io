@@ -36,7 +36,9 @@ Restore the old tennis courts behind the WRA pool into a **multi-use sport court
 
 ## Stack & deploy
 
-Nuxt 3 + Content Wind (@nuxt/content v2, Markdown + MDC) + TailwindCSS + Pinceau (primary: emerald) · Yarn. Same stack family as the WCA site (`~/repos/woodmont-civic.github.io`) but intentionally leaner — no PWA/GA/SEO modules yet.
+Nuxt 3 + Content Wind (@nuxt/content v2, Markdown + MDC) + TailwindCSS + Pinceau (primary: emerald) · Yarn. Same stack family as the WCA site (`~/repos/woodmont-civic.github.io`) but intentionally leaner — no PWA/SEO modules yet.
+
+**Analytics**: Google Analytics 4 via `nuxt-gtag` (same as WCA). The measurement ID is `gaMeasurementId` at the top of `nuxt.config.ts`; the tag is off while it's empty. GA4 enhanced measurement records page views and outbound clicks (sign-up form, roadmap) with no extra code.
 
 ```bash
 yarn install    # deps

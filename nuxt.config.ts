@@ -1,6 +1,15 @@
+// Google Analytics 4 measurement ID for woodmontfriends.org (G-XXXXXXXXXX). The tag stays off until it's set.
+const gaMeasurementId = 'G-F7K6JQCR5L'
+
 export default defineNuxtConfig({
   extends: 'content-wind',
+  modules: ['nuxt-gtag'],
   css: ['~/assets/css/park.css'],
+  gtag: {
+    // GA4 enhanced measurement (on by default) also records outbound clicks, such as to the sign-up form.
+    id: gaMeasurementId,
+    enabled: Boolean(gaMeasurementId),
+  },
   colorMode: {
     preference: 'light',
     fallback: 'light',
