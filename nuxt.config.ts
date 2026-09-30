@@ -1,5 +1,5 @@
 // Google Analytics 4 measurement ID for woodmontfriends.org (G-XXXXXXXXXX). The tag stays off until it's set.
-const gaMeasurementId = ''
+const gaMeasurementId = 'G-F7K6JQCR5L'
 
 export default defineNuxtConfig({
   extends: 'content-wind',
