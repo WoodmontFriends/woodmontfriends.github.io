@@ -15,7 +15,7 @@ const year = new Date().getFullYear()
           <span class="blaze" aria-hidden="true" />
           <span>Friends of Woodmont Park</span>
         </NuxtLink>
-        <a class="header-link" :href="signupUrl">Get updates</a>
+        <a class="header-link" :href="signupUrl" target="_blank" rel="noopener noreferrer">Get updates</a>
       </div>
     </header>
 

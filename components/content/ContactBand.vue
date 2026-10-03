@@ -13,7 +13,7 @@ const { signupUrl } = useAppConfig()
       <div class="band-body">
         <ContentSlot :use="$slots.default" unwrap="p" />
       </div>
-      <a class="btn btn-blaze" :href="signupUrl">Sign up for updates</a>
+      <a class="btn btn-blaze" :href="signupUrl" target="_blank" rel="noopener noreferrer">Sign up for updates</a>
       <p class="band-email">Or email us at <EmailAddress /></p>
     </div>
   </section>

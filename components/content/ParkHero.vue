@@ -7,9 +7,10 @@ const props = defineProps({
 })
 // "signup" resolves to the sign-up form URL in app.config.ts
 const { signupUrl } = useAppConfig()
-const resolve = (href: string) => (href === 'signup' ? signupUrl : href)
+const resolve = (href?: string) => (href === 'signup' ? signupUrl : href || '')
 const primary = computed(() => resolve(props.primaryHref))
 const secondary = computed(() => resolve(props.secondaryHref))
+const isExternal = (href?: string) => Boolean(href && (href === signupUrl || href.startsWith('http://') || href.startsWith('https://')))
 </script>
 
 <template>
@@ -21,8 +22,20 @@ const secondary = computed(() => resolve(props.secondaryHref))
       </h1>
       <p class="tagline"><ContentSlot :use="$slots.default" unwrap="p" /></p>
       <div v-if="primaryLabel || secondaryLabel" class="actions">
-        <a v-if="primaryLabel" :href="primary" class="btn btn-blaze">{{ primaryLabel }}</a>
-        <a v-if="secondaryLabel" :href="secondary" class="btn btn-ghost">{{ secondaryLabel }}</a>
+        <a 
+          v-if="primaryLabel" 
+          :href="primary" 
+          :target="isExternal(primary) ? '_blank' : undefined"
+          :rel="isExternal(primary) ? 'noopener noreferrer' : undefined"
+          class="btn btn-blaze"
+        >{{ primaryLabel }}</a>
+        <a 
+          v-if="secondaryLabel" 
+          :href="secondary" 
+          :target="isExternal(secondary) ? '_blank' : undefined"
+          :rel="isExternal(secondary) ? 'noopener noreferrer' : undefined"
+          class="btn btn-ghost"
+        >{{ secondaryLabel }}</a>
       </div>
     </div>
   </section>
