@@ -75,6 +75,15 @@ let timer: ReturnType<typeof setInterval> | null = null
 
 const currentPhoto = computed(() => items.value[currentIndex.value])
 
+// Smart image buffer: only load active, next, and previous photos in memory to maximize mobile GPU performance
+const isPhotoLoaded = (index: number) => {
+  const total = items.value.length
+  if (total <= 3) return true
+  const prev = (currentIndex.value - 1 + total) % total
+  const next = (currentIndex.value + 1) % total
+  return index === currentIndex.value || index === prev || index === next
+}
+
 const nextSlide = () => {
   currentIndex.value = (currentIndex.value + 1) % items.value.length
 }
@@ -122,31 +131,36 @@ const handleMouseLeave = () => {
   }
 }
 
-// Touch swipe support
+// Mobile touch swipe handling with vertical scroll protection
 const touchStartX = ref(0)
-const touchEndX = ref(0)
+const touchStartY = ref(0)
 
 const handleTouchStart = (e: TouchEvent) => {
-  touchStartX.value = e.changedTouches[0].screenX
+  if (!e.changedTouches || e.changedTouches.length === 0) return
+  touchStartX.value = e.changedTouches[0].clientX
+  touchStartY.value = e.changedTouches[0].clientY
   stopTimer()
 }
 
 const handleTouchEnd = (e: TouchEvent) => {
-  touchEndX.value = e.changedTouches[0].screenX
-  handleSwipe()
-  if (isPlaying.value) {
-    startTimer()
-  }
-}
+  if (!e.changedTouches || e.changedTouches.length === 0) return
+  const touchEndX = e.changedTouches[0].clientX
+  const touchEndY = e.changedTouches[0].clientY
+  
+  const diffX = touchStartX.value - touchEndX
+  const diffY = touchStartY.value - touchEndY
 
-const handleSwipe = () => {
-  const diff = touchStartX.value - touchEndX.value
-  if (Math.abs(diff) > 40) {
-    if (diff > 0) {
+  // Only trigger horizontal swipe if horizontal movement > vertical movement (protect vertical scrolling on mobile)
+  if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 35) {
+    if (diffX > 0) {
       nextSlide()
     } else {
       prevSlide()
     }
+  }
+
+  if (isPlaying.value) {
+    startTimer()
   }
 }
 
@@ -192,8 +206,8 @@ onUnmounted(() => {
       class="slideshow-container"
       @mouseenter="handleMouseEnter"
       @mouseleave="handleMouseLeave"
-      @touchstart="handleTouchStart"
-      @touchend="handleTouchEnd"
+      @touchstart.passive="handleTouchStart"
+      @touchend.passive="handleTouchEnd"
       role="region"
       aria-label="Park photos slideshow"
     >
@@ -207,10 +221,12 @@ onUnmounted(() => {
             class="slide-item"
           >
             <img 
+              v-if="isPhotoLoaded(index)"
               :src="photo.src" 
               :alt="photo.alt" 
               class="slide-image"
-              loading="lazy"
+              decoding="async"
+              :loading="index === currentIndex ? 'eager' : 'lazy'"
             />
             
             <div class="slide-overlay">
@@ -225,7 +241,7 @@ onUnmounted(() => {
 
         <!-- Click to expand hint -->
         <div class="zoom-hint" title="Click for fullscreen view">
-          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
             <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
           </svg>
         </div>
@@ -237,7 +253,7 @@ onUnmounted(() => {
         @click.stop="prevSlide" 
         aria-label="Previous photo"
       >
-        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2.5" fill="none">
+        <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2.5" fill="none">
           <path d="M15 18l-6-6 6-6"/>
         </svg>
       </button>
@@ -247,7 +263,7 @@ onUnmounted(() => {
         @click.stop="nextSlide" 
         aria-label="Next photo"
       >
-        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2.5" fill="none">
+        <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2.5" fill="none">
           <path d="M9 18l6-6-6-6"/>
         </svg>
       </button>
@@ -258,11 +274,12 @@ onUnmounted(() => {
           <button 
             v-for="(_, index) in items" 
             :key="index"
-            class="dot-btn"
-            :class="{ active: index === currentIndex }"
+            class="dot-btn-wrapper"
             @click.stop="goToSlide(index)"
             :aria-label="`Go to photo ${index + 1}`"
-          />
+          >
+            <span class="dot-btn" :class="{ active: index === currentIndex }" />
+          </button>
         </div>
 
         <button 
@@ -314,6 +331,7 @@ onUnmounted(() => {
                 :src="currentPhoto.src" 
                 :alt="currentPhoto.alt" 
                 class="lightbox-img"
+                decoding="async"
               />
               <div class="lightbox-caption">
                 <h4>{{ currentPhoto.title }}</h4>
@@ -337,13 +355,13 @@ onUnmounted(() => {
 
 <style scoped>
 .slideshow-wrapper {
-  margin: 2rem 0;
+  margin: 1.5rem 0;
   width: 100%;
 }
 
 .slideshow-heading {
   margin: 0 0 1rem;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   color: var(--hemlock);
 }
 
@@ -352,8 +370,10 @@ onUnmounted(() => {
   border-radius: 12px;
   overflow: hidden;
   background: var(--hemlock-deep);
-  box-shadow: 0 10px 30px rgba(31, 58, 46, 0.15);
+  box-shadow: 0 8px 24px rgba(31, 58, 46, 0.16);
   user-select: none;
+  touch-action: pan-y;
+  will-change: transform;
 }
 
 .slides-frame {
@@ -376,6 +396,9 @@ onUnmounted(() => {
   left: 0;
   width: 100%;
   height: 100%;
+  will-change: opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .slide-image {
@@ -383,6 +406,7 @@ onUnmounted(() => {
   height: 100%;
   object-fit: cover;
   display: block;
+  transform: translateZ(0);
 }
 
 .slide-overlay {
@@ -390,10 +414,10 @@ onUnmounted(() => {
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 2.5rem 1.5rem 1.25rem;
-  background: linear-gradient(to top, rgba(22, 43, 34, 0.92) 0%, rgba(22, 43, 34, 0.6) 65%, transparent 100%);
+  padding: 2.2rem 1.25rem 1rem;
+  background: linear-gradient(to top, rgba(16, 32, 25, 0.95) 0%, rgba(16, 32, 25, 0.65) 65%, transparent 100%);
   color: var(--on-dark);
-  transition: opacity 0.3s ease;
+  will-change: opacity;
 }
 
 .caption-content {
@@ -402,20 +426,20 @@ onUnmounted(() => {
 
 .slide-badge {
   display: inline-block;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.05em;
-  padding: 0.2rem 0.55rem;
+  padding: 0.15rem 0.5rem;
   border-radius: 4px;
   background: var(--blaze);
   color: var(--hemlock-deep);
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.35rem;
 }
 
 .slide-title {
-  margin: 0 0 0.25rem;
+  margin: 0 0 0.2rem;
   font-family: var(--font-display);
-  font-size: clamp(1.2rem, 2.8vw, 1.6rem);
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
   font-weight: 600;
   color: var(--on-dark);
   line-height: 1.2;
@@ -423,108 +447,115 @@ onUnmounted(() => {
 
 .slide-caption {
   margin: 0;
-  font-size: clamp(0.9rem, 2vw, 1rem);
+  font-size: clamp(0.85rem, 1.8vw, 0.95rem);
   color: var(--on-dark-soft);
-  line-height: 1.4;
+  line-height: 1.35;
 }
 
 .zoom-hint {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: rgba(31, 58, 46, 0.7);
-  backdrop-filter: blur(4px);
+  top: 0.75rem;
+  right: 0.75rem;
+  background: rgba(22, 43, 34, 0.82);
   color: var(--on-dark);
-  padding: 0.45rem;
+  padding: 0.4rem;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0.85;
+  opacity: 0.9;
   transition: opacity 0.2s, transform 0.2s;
   z-index: 2;
 }
 
-.slides-frame:hover .zoom-hint {
-  opacity: 1;
-  transform: scale(1.08);
+@media (hover: hover) {
+  .slides-frame:hover .zoom-hint {
+    opacity: 1;
+    transform: scale(1.08);
+  }
 }
 
-/* Nav Buttons */
+/* Nav Buttons optimized for mobile touch */
 .nav-btn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(31, 58, 46, 0.75);
-  backdrop-filter: blur(4px);
+  background: rgba(22, 43, 34, 0.82);
   color: var(--on-dark);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  width: 2.75rem;
-  height: 2.75rem;
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background-color 0.2s, transform 0.2s, border-color 0.2s;
+  transition: background-color 0.15s, color 0.15s;
   z-index: 3;
+  touch-action: manipulation;
 }
 
-.nav-btn:hover {
-  background: var(--hemlock);
-  border-color: var(--blaze);
-  color: var(--blaze);
-  transform: translateY(-50%) scale(1.08);
+@media (hover: hover) {
+  .nav-btn:hover {
+    background: var(--hemlock);
+    border-color: var(--blaze);
+    color: var(--blaze);
+  }
 }
 
 .prev-btn {
-  left: 1rem;
+  left: 0.6rem;
 }
 
 .next-btn {
-  right: 1rem;
+  right: 0.6rem;
 }
 
 /* Bottom Toolbar */
 .toolbar {
   position: absolute;
-  bottom: 0.75rem;
-  right: 1rem;
+  bottom: 0.6rem;
+  right: 0.75rem;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
   z-index: 3;
-  background: rgba(22, 43, 34, 0.75);
-  backdrop-filter: blur(6px);
-  padding: 0.35rem 0.75rem;
+  background: rgba(16, 32, 25, 0.88);
+  padding: 0.3rem 0.65rem;
   border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 .dots-list {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.15rem;
+}
+
+/* Large 28px touch target area for mobile tap, compact 7px visual dot */
+.dot-btn-wrapper {
+  background: transparent;
+  border: none;
+  padding: 0.4rem 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  touch-action: manipulation;
 }
 
 .dot-btn {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.4);
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  transition: background-color 0.25s, transform 0.25s;
-}
-
-.dot-btn:hover {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.45);
+  display: block;
+  transition: background-color 0.2s, transform 0.2s;
 }
 
 .dot-btn.active {
   background: var(--blaze);
-  transform: scale(1.35);
+  transform: scale(1.4);
 }
 
 .play-toggle-btn {
@@ -532,21 +563,23 @@ onUnmounted(() => {
   border: none;
   color: var(--on-dark);
   cursor: pointer;
-  padding: 0.1rem;
+  padding: 0.2rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.2s;
+  transition: color 0.15s;
+  touch-action: manipulation;
 }
 
 .play-toggle-btn:hover {
   color: var(--blaze);
 }
 
-/* Fade Transitions */
+/* Hardware Accelerated Transitions */
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.6s ease-in-out;
+  transition: opacity 0.5s ease-in-out;
+  will-change: opacity;
 }
 
 .fade-enter-from,
@@ -559,16 +592,15 @@ onUnmounted(() => {
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: rgba(14, 27, 21, 0.94);
-  backdrop-filter: blur(10px);
+  background: rgba(10, 20, 16, 0.96);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 1.5rem;
 }
 
 .lightbox-content {
-  max-width: 90vw;
+  max-width: 92vw;
   max-height: 85vh;
   display: flex;
   flex-direction: column;
@@ -580,39 +612,40 @@ onUnmounted(() => {
   max-height: 75vh;
   object-fit: contain;
   border-radius: 8px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
 }
 
 .lightbox-caption {
-  margin-top: 1rem;
+  margin-top: 0.85rem;
   text-align: center;
   color: var(--on-dark);
 }
 
 .lightbox-caption h4 {
-  margin: 0 0 0.25rem;
+  margin: 0 0 0.2rem;
   color: var(--blaze);
   font-family: var(--font-display);
-  font-size: 1.4rem;
+  font-size: 1.3rem;
 }
 
 .lightbox-caption p {
   margin: 0;
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: var(--on-dark-soft);
 }
 
 .lightbox-close {
   position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
+  top: 1rem;
+  right: 1.25rem;
   background: transparent;
   border: none;
   color: var(--on-dark);
   font-size: 2.5rem;
   line-height: 1;
   cursor: pointer;
-  transition: color 0.2s;
+  transition: color 0.15s;
+  touch-action: manipulation;
 }
 
 .lightbox-close:hover {
@@ -623,18 +656,19 @@ onUnmounted(() => {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.12);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: var(--on-dark);
-  font-size: 3rem;
-  width: 4rem;
-  height: 4rem;
+  font-size: 2.5rem;
+  width: 3.5rem;
+  height: 3.5rem;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
+  transition: background-color 0.15s, color 0.15s;
+  touch-action: manipulation;
 }
 
 .lightbox-nav:hover {
@@ -643,16 +677,16 @@ onUnmounted(() => {
 }
 
 .lightbox-prev {
-  left: 2rem;
+  left: 1rem;
 }
 
 .lightbox-next {
-  right: 2rem;
+  right: 1rem;
 }
 
 .lightbox-fade-enter-active,
 .lightbox-fade-leave-active {
-  transition: opacity 0.3s ease;
+  transition: opacity 0.25s ease;
 }
 
 .lightbox-fade-enter-from,
