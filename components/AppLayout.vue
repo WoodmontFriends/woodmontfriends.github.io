@@ -15,7 +15,10 @@ const year = new Date().getFullYear()
           <span class="blaze" aria-hidden="true" />
           <span>Friends of Woodmont Park</span>
         </NuxtLink>
-        <a class="header-link" :href="signupUrl" target="_blank" rel="noopener noreferrer">Get updates</a>
+        <nav class="header-links" aria-label="Site">
+          <NuxtLink class="header-link" to="/board">Board portal</NuxtLink>
+          <a class="header-link" :href="signupUrl" target="_blank" rel="noopener noreferrer">Get updates</a>
+        </nav>
       </div>
     </header>
 
@@ -36,6 +39,7 @@ const year = new Date().getFullYear()
           </p>
           <p><EmailAddress /></p>
           <p><a :href="roadmapUrl">See our community roadmap</a></p>
+          <p><NuxtLink to="/board">Board portal sign-in</NuxtLink></p>
         </div>
         <div class="footer-partners">
           <h2 class="footer-heading">Community partners</h2>
@@ -87,6 +91,12 @@ const year = new Date().getFullYear()
   font-weight: 600;
   font-size: 1.15rem;
   text-decoration: none;
+}
+.header-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.25rem 1.25rem;
 }
 .header-link {
   color: var(--on-dark);
