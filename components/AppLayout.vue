@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const { cover, signupUrl, roadmapUrl } = useAppConfig()
 const year = new Date().getFullYear()
+const natureMap = useFeature('natureMap')
 </script>
 
 <template>
@@ -16,6 +17,7 @@ const year = new Date().getFullYear()
           <span>Friends of Woodmont Park</span>
         </NuxtLink>
         <nav class="header-links" aria-label="Site">
+          <NuxtLink v-if="natureMap" class="header-link" to="/nature">Nature map</NuxtLink>
           <NuxtLink class="header-link" to="/board">Board portal</NuxtLink>
           <a class="header-link" :href="signupUrl" target="_blank" rel="noopener noreferrer">Get updates</a>
         </nav>
