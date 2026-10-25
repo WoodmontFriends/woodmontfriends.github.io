@@ -64,6 +64,14 @@ yarn generate   # static build → ./dist
 - Design: tokens and base styles in `assets/css/park.css`. Hemlock green `#1f3a2e`, blaze yellow `#f2c230` (the only accent: logo mark, main buttons, trail markers), fern tint `#eef3ec`. Zilla Slab headings and Public Sans body text, loaded from Google Fonts in `nuxt.config.ts`. Light mode only.
 - Preview: `yarn generate`, then serve `dist/` (e.g. `python3 -m http.server` inside it). `yarn dev` has shown Nuxt's welcome page instead of the site.
 
+## Feature flags
+
+Flags live under `features` in `app.config.ts`. Wrap flagged page content in `::feature-flag{name="..."}` (default slot when on, `#off` slot otherwise); off pages get `noindex`. Preview a flag that's off with `?flag=<name>` (remembered in that browser; `?flag=off` clears it). Don't use `?preview=`, since Nuxt Content claims it for its own preview mode. Unlinked flagged pages need adding to `nitro.prerender.routes` in `nuxt.config.ts`.
+
+## Nature map (`/nature`, flag `natureMap`)
+
+`components/content/NatureMap.vue`: Leaflet map of iNaturalist observations, fetched in the browser from the public API (no backend). Settings under `nature` in `app.config.ts`: `projectSlug` (empty → bounding-box search), `bounds`, `protectedGenera` (edible species shown only as ~150 m areas). Observations iNaturalist obscures or marks private are left off the map and counted in a note. Basemaps: OpenStreetMap tiles and Esri World Imagery (keep their attributions).
+
 Roadmap: add an admin backend for content management (stack TBD).
 
 ## Google Drive (private)
