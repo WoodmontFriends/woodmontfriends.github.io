@@ -69,33 +69,54 @@ const projectUrl = computed(() =>
 )
 
 // ---------- data ----------
+const PER_PAGE = 200
+const MAX_PAGES = 5
+
+// One page of observations, retried once after a short pause (iNaturalist sometimes
+// answers 429/5xx or drops a slow response).
+async function fetchPage(params: URLSearchParams) {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      const res = await fetch(`https://api.inaturalist.org/v1/observations?${params}`)
+      if (!res.ok) throw new Error(`iNaturalist returned ${res.status}`)
+      return await res.json()
+    } catch (err) {
+      if (attempt >= 1) throw err
+      await new Promise(r => setTimeout(r, 1500))
+    }
+  }
+}
+
 async function load() {
   status.value = 'loading'
-  try {
-    const all: Sighting[] = []
-    const base = new URLSearchParams({ per_page: '200', order_by: 'observed_on', order: 'desc', locale: 'en' })
-    if (nature.projectSlug) base.set('project_id', nature.projectSlug)
-    else Object.entries(nature.bounds).forEach(([k, v]) => base.set(k, String(v)))
+  const all: Sighting[] = []
+  const base = new URLSearchParams({ per_page: String(PER_PAGE), order_by: 'observed_on', order: 'desc', locale: 'en' })
+  if (nature.projectSlug) base.set('project_id', nature.projectSlug)
+  else Object.entries(nature.bounds).forEach(([k, v]) => base.set(k, String(v)))
 
-    for (let page = 1; page <= 5; page++) {
-      base.set('page', String(page))
-      const res = await fetch(`https://api.inaturalist.org/v1/observations?${base}`)
-      if (!res.ok) throw new Error(`iNaturalist returned ${res.status}`)
-      const data = await res.json()
-      totalOnINat.value = data.total_results ?? 0
-      for (const o of data.results ?? []) {
-        const s = toSighting(o)
-        if (s) all.push(s)
-      }
-      if (page * 200 >= totalOnINat.value) break
+  for (let page = 1; page <= MAX_PAGES; page++) {
+    base.set('page', String(page))
+    let data
+    try {
+      data = await fetchPage(base)
+    } catch (err) {
+      console.error('[nature-map]', err)
+      // Only fail outright if nothing loaded; otherwise keep what we have.
+      if (!all.length) status.value = 'error'
+      return
     }
-    sightings.value = all
-    const months = all.map(s => s.month)
-    timelineMonth.value = months.length ? Math.max(...months) : 0
-    status.value = 'ready'
-  } catch (err) {
-    console.error('[nature-map]', err)
-    status.value = 'error'
+    totalOnINat.value = data.total_results ?? 0
+    for (const o of data.results ?? []) {
+      const s = toSighting(o)
+      if (s) all.push(s)
+    }
+    // Show the map as soon as the newest sightings arrive; older pages fill in behind.
+    sightings.value = [...all]
+    if (page === 1) {
+      timelineMonth.value = all.length ? all.reduce((m, s) => Math.max(m, s.month), 0) : 0
+      status.value = 'ready'
+    }
+    if (page * PER_PAGE >= totalOnINat.value) break
   }
 }
 
