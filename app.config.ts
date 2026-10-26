@@ -16,13 +16,8 @@ export default defineAppConfig({
   // Park nature map settings
   nature: {
     // iNaturalist project slug (the part after /projects/ in its URL). While empty, the map
-    // shows every iNaturalist observation inside `bounds` instead.
+    // shows iNaturalist observations inside the areas in data/nature-areas.ts instead.
     projectSlug: '',
-    // Rough box around the park; used for the search above and to frame the map.
-    bounds: { swlat: 37.5225, swlng: -77.5925, nelat: 37.5315, nelng: -77.5805 },
-    // Woodmont pool, 2334 Traymore Rd
-    center: [37.5272, -77.5863] as [number, number],
-    zoom: 16,
     // Edible species people may harvest. They show as a rough area, never an exact pin.
     // Matched on the scientific name's first word (genus).
     protectedGenera: ['Cantharellus', 'Craterellus', 'Morchella', 'Grifola', 'Hericium', 'Laetiporus', 'Hydnum', 'Boletus'],

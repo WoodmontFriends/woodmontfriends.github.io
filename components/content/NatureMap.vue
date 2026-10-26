@@ -1,14 +1,11 @@
 <script setup lang="ts">
 // Park nature map: plant, fungus, and wildlife sightings pulled live from iNaturalist.
-// Settings live under `nature` in app.config.ts.
+// Settings live under `nature` in app.config.ts; the mapped areas live in data/nature-areas.ts.
 import 'leaflet/dist/leaflet.css'
+import { NATURE_AREAS, NATURE_BOUNDS, inArea } from '~/data/nature-areas'
 
-type Bounds = { swlat: number; swlng: number; nelat: number; nelng: number }
 type NatureConfig = {
   projectSlug: string
-  bounds: Bounds
-  center: [number, number]
-  zoom: number
   protectedGenera: string[]
 }
 
@@ -27,6 +24,7 @@ type Sighting = {
   researchGrade: boolean
   hidden: boolean // location withheld by iNaturalist (sensitive species or observer's choice)
   foraged: boolean // edible species we only show as an area
+  areas: string[] // ids of the mapped areas it falls inside
 }
 
 const { nature } = useAppConfig() as { nature: NatureConfig }
@@ -55,6 +53,7 @@ const TRAIL_MONTHS = 3 // the timeline shows the chosen month plus the two befor
 const status = ref<'loading' | 'ready' | 'error'>('loading')
 const sightings = ref<Sighting[]>([])
 const totalOnINat = ref(0)
+const fetched = ref(0)
 const activeGroups = ref<Set<string>>(new Set(GROUPS.map(g => g.id)))
 const search = ref('')
 const view = ref<'pins' | 'heat'>('pins')
@@ -63,6 +62,7 @@ const timeline = ref(false)
 const timelineMonth = ref(0)
 const playing = ref(false)
 const selectedId = ref<number | null>(null)
+const where = ref('all') // 'all' or an area id
 
 const projectUrl = computed(() =>
   nature.projectSlug ? `https://www.inaturalist.org/projects/${nature.projectSlug}` : null,
@@ -70,7 +70,7 @@ const projectUrl = computed(() =>
 
 // ---------- data ----------
 const PER_PAGE = 200
-const MAX_PAGES = 5
+const MAX_PAGES = 12 // up to 2,400 of the newest sightings
 
 // One page of observations, retried once after a short pause (iNaturalist sometimes
 // answers 429/5xx or drops a slow response).
@@ -89,10 +89,11 @@ async function fetchPage(params: URLSearchParams) {
 
 async function load() {
   status.value = 'loading'
+  fetched.value = 0
   const all: Sighting[] = []
   const base = new URLSearchParams({ per_page: String(PER_PAGE), order_by: 'observed_on', order: 'desc', locale: 'en' })
   if (nature.projectSlug) base.set('project_id', nature.projectSlug)
-  else Object.entries(nature.bounds).forEach(([k, v]) => base.set(k, String(v)))
+  else Object.entries(NATURE_BOUNDS).forEach(([k, v]) => base.set(k, String(v)))
 
   for (let page = 1; page <= MAX_PAGES; page++) {
     base.set('page', String(page))
@@ -106,9 +107,12 @@ async function load() {
       return
     }
     totalOnINat.value = data.total_results ?? 0
+    fetched.value += data.results?.length ?? 0
     for (const o of data.results ?? []) {
       const s = toSighting(o)
-      if (s) all.push(s)
+      // Without a project, the search is a box, so drop anything outside our areas.
+      // (Hidden locations can't be checked; they're only counted, never mapped.)
+      if (s && (s.hidden || nature.projectSlug || s.areas.length)) all.push(s)
     }
     // Show the map as soon as the newest sightings arrive; older pages fill in behind.
     sightings.value = [...all]
@@ -127,6 +131,7 @@ function toSighting(o: any): Sighting | null {
   const sci: string = o.taxon?.name ?? ''
   const genus = sci.split(' ')[0]
   const hidden = Boolean(o.obscured || o.geoprivacy === 'private' || o.taxon_geoprivacy === 'private' || !coords)
+  const areas = hidden ? [] : NATURE_AREAS.filter(a => inArea(coords[0], coords[1], a)).map(a => a.id)
   return {
     id: o.id,
     url: o.uri || `https://www.inaturalist.org/observations/${o.id}`,
@@ -142,6 +147,7 @@ function toSighting(o: any): Sighting | null {
     researchGrade: o.quality_grade === 'research',
     hidden,
     foraged: nature.protectedGenera.includes(genus),
+    areas,
   }
 }
 
@@ -153,13 +159,17 @@ function matchesSearch(s: Sighting) {
   const q = search.value.trim().toLowerCase()
   return !q || s.name.toLowerCase().includes(q) || s.sci.toLowerCase().includes(q)
 }
+function inWhere(s: Sighting) {
+  if (where.value === 'all') return true
+  return s.areas.includes(where.value)
+}
 function inWindow(s: Sighting) {
   if (!timeline.value) return true
   return s.month <= timelineMonth.value && s.month > timelineMonth.value - TRAIL_MONTHS
 }
 
 // Everything except the group filter, so the chips can show counts.
-const beforeGroups = computed(() => sightings.value.filter(s => matchesSearch(s) && inWindow(s)))
+const beforeGroups = computed(() => sightings.value.filter(s => matchesSearch(s) && inWhere(s) && inWindow(s)))
 const groupCounts = computed(() => {
   const c: Record<string, number> = {}
   for (const s of beforeGroups.value) c[s.group] = (c[s.group] ?? 0) + 1
@@ -208,6 +218,25 @@ let pinLayer: any
 let areaLayer: any
 let heatLayer: any
 const markers = new Map<number, any>()
+const outlines = new Map<string, any>()
+
+function outlineStyle(a: (typeof NATURE_AREAS)[number]) {
+  const onAerial = basemap.value === 'aerial'
+  const dim = where.value !== 'all' && where.value !== a.id
+  if (a.style === 'park') {
+    return { color: '#f2c230', weight: 3, opacity: dim ? 0.4 : 1, fillColor: '#f2c230', fillOpacity: dim ? 0.04 : 0.12 }
+  }
+  return {
+    color: onAerial ? '#ffffff' : '#1f3a2e',
+    weight: 2,
+    opacity: dim ? 0.3 : 0.8,
+    dashArray: '6 6',
+    fillOpacity: 0,
+  }
+}
+function restyleOutlines() {
+  for (const a of NATURE_AREAS) outlines.get(a.id)?.setStyle(outlineStyle(a))
+}
 
 const HEAT_GRADIENT = { 0.2: '#9ec5f4', 0.45: '#5598e7', 0.7: '#256abf', 1: '#0d366b' }
 const AREA_GRID = 0.0015 // ~150 m cells for foraged species
@@ -218,8 +247,8 @@ async function initMap() {
   await import('leaflet.heat')
   if (!mapEl.value || map) return // unmounted while loading, or already set up
 
-  const { swlat, swlng, nelat, nelng } = nature.bounds
-  map = L.map(mapEl.value!, { zoomControl: true, scrollWheelZoom: false })
+  const { swlat, swlng, nelat, nelng } = NATURE_BOUNDS
+  map = L.map(mapEl.value!, { zoomControl: true, scrollWheelZoom: false, zoomSnap: 0.25 })
     .fitBounds([[swlat, swlng], [nelat, nelng]])
   map.on('focus', () => map.scrollWheelZoom.enable())
   map.on('blur', () => map.scrollWheelZoom.disable())
@@ -234,6 +263,14 @@ async function initMap() {
   })
   tiles[basemap.value].addTo(map)
   map.attributionControl.addAttribution('Sightings from <a href="https://www.inaturalist.org">iNaturalist</a>')
+
+  // Outlines of the mapped areas, under everything else.
+  for (const a of NATURE_AREAS) {
+    const shape = L.polygon(a.ring.map(([lng, lat]) => [lat, lng]), outlineStyle(a))
+      .bindTooltip(a.name, { sticky: true })
+      .addTo(map)
+    outlines.set(a.id, shape)
+  }
 
   pinLayer = L.layerGroup().addTo(map)
   areaLayer = L.layerGroup().addTo(map)
@@ -323,6 +360,14 @@ watch(basemap, (b, prev) => {
   if (!map) return
   map.removeLayer(tiles[prev])
   tiles[b].addTo(map)
+  restyleOutlines()
+})
+watch(where, w => {
+  if (!map) return
+  restyleOutlines()
+  const shape = outlines.get(w)
+  if (shape) map.fitBounds(shape.getBounds(), { padding: [20, 20] })
+  else map.fitBounds([[NATURE_BOUNDS.swlat, NATURE_BOUNDS.swlng], [NATURE_BOUNDS.nelat, NATURE_BOUNDS.nelng]])
 })
 
 onMounted(() => {
@@ -374,6 +419,13 @@ const listed = computed(() => visible.value.slice(0, 60))
           <label class="nm-search">
             <span class="sr-only">Search species</span>
             <input v-model="search" type="search" placeholder="Search: puffball, deer, oak…" autocomplete="off">
+          </label>
+          <label class="nm-where">
+            <span class="sr-only">Area</span>
+            <select v-model="where">
+              <option value="all">All areas</option>
+              <option v-for="a in NATURE_AREAS" :key="a.id" :value="a.id">{{ a.name }}</option>
+            </select>
           </label>
           <div class="nm-seg" role="group" aria-label="Map style">
             <button type="button" :aria-pressed="view === 'pins'" @click="view = 'pins'">Pins</button>
@@ -460,7 +512,7 @@ const listed = computed(() => visible.value.slice(0, 60))
           {{ hiddenCount }} {{ hiddenCount === 1 ? 'sighting is' : 'sightings are' }} left off the map because iNaturalist hides the exact spot to protect a sensitive species or the observer's privacy.
         </template>
         Edible mushrooms like chanterelles show as a dashed circle instead of a pin, so a patch isn't picked clean.
-        <template v-if="totalOnINat > sightings.length"> Showing the newest {{ sightings.length.toLocaleString() }} of {{ totalOnINat.toLocaleString() }}.</template>
+        <template v-if="totalOnINat > fetched"> Showing sightings from the newest {{ fetched.toLocaleString() }} of {{ totalOnINat.toLocaleString() }} on iNaturalist.</template>
         <a v-if="projectUrl" :href="projectUrl" target="_blank" rel="noopener noreferrer">See everything on iNaturalist</a>
       </p>
     </div>
@@ -557,6 +609,19 @@ const listed = computed(() => visible.value.slice(0, 60))
   color: var(--ink);
 }
 .nm-search input:focus {
+  outline: 3px solid var(--hemlock);
+  outline-offset: 1px;
+}
+.nm-where select {
+  min-height: 2.4rem;
+  padding: 0.35rem 2rem 0.35rem 0.75rem;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background-color: var(--paper);
+  font: 600 0.92rem var(--font-body);
+  color: var(--ink);
+}
+.nm-where select:focus {
   outline: 3px solid var(--hemlock);
   outline-offset: 1px;
 }
