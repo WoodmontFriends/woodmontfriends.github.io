@@ -53,7 +53,7 @@ yarn generate   # static build → ./dist
 ## Editing content
 
 - Home page: `content/1.index.md` — frontmatter `navigation.title` / `layout` / `title` / `description` (WCA conventions). Each band of the page is an MDC component, so copy edits stay in Markdown:
-  - `::park-hero{primary-label primary-href secondary-label secondary-href}` — dark hero with the name lockup; body is the tagline. An href of `signup` resolves to `signupUrl` in `app.config.ts`.
+  - `::park-hero{primary-label primary-href secondary-label secondary-href}` — dark hero with the name lockup; body is the tagline. An href of `signup` resolves to `signupUrl` in `app.config.ts`. Optional `link-label`/`link-href` add a quiet text link under the buttons (the home page uses it for `#calendar`).
   - `::page-section{id title tone="paper|fern"}` — a titled section; optional `#aside` slot for a right-hand column (used for `::mission-quote`).
   - `::event-list` > `::event-item{month day weekday title}` — date-block events.
   - `::trail` > `::trail-stop{title}` — the phased plan, drawn as a trail with blaze markers. Only for content that really is a sequence.

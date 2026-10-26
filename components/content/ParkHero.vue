@@ -4,6 +4,9 @@ const props = defineProps({
   primaryHref: { type: String, default: '' },
   secondaryLabel: { type: String, default: '' },
   secondaryHref: { type: String, default: '' },
+  // Optional quiet text link under the buttons, e.g. to the calendar call-out (#calendar).
+  linkLabel: { type: String, default: '' },
+  linkHref: { type: String, default: '' },
 })
 // "signup" resolves to the sign-up form URL in app.config.ts
 const { signupUrl } = useAppConfig()
@@ -37,11 +40,33 @@ const isExternal = (href?: string) => Boolean(href && (href === signupUrl || hre
           class="btn btn-ghost"
         >{{ secondaryLabel }}</a>
       </div>
+      <p v-if="linkLabel && linkHref" class="hero-link">
+        <a :href="linkHref">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="4.5" width="18" height="16.5" rx="2" />
+            <path d="M3 9.5h18M8 2.5v4M16 2.5v4" />
+          </svg>
+          {{ linkLabel }}
+        </a>
+      </p>
     </div>
   </section>
 </template>
 
 <style scoped>
+.hero-link {
+  margin: 1.25rem 0 0;
+}
+.hero-link a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--on-dark);
+  font-weight: 600;
+}
+.hero-link svg {
+  color: var(--blaze);
+}
 .hero {
   background: var(--hemlock);
   color: var(--on-dark);

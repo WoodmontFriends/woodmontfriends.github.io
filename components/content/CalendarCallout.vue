@@ -2,13 +2,14 @@
 // "Add our calendar" call-out: one-tap subscribe links for the public FWP Community Events
 // calendar. Body text (optional) is the slot; the links are built from communityCalendarId.
 defineProps({
+  id: { type: String, default: 'calendar' }, // anchor, e.g. the home hero links to #calendar
   title: { type: String, default: 'Never miss a park day' },
 })
 const { google, ics, web } = useCommunityCalendar()
 </script>
 
 <template>
-  <aside class="callout" aria-labelledby="calendar-callout-title">
+  <aside :id="id" class="callout" aria-labelledby="calendar-callout-title">
     <span class="mark" aria-hidden="true">
       <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="4.5" width="18" height="16.5" rx="2" />
@@ -32,6 +33,7 @@ const { google, ics, web } = useCommunityCalendar()
 
 <style scoped>
 .callout {
+  scroll-margin-top: 1.5rem;
   display: flex;
   gap: 1.1rem;
   align-items: flex-start;
