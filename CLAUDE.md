@@ -72,7 +72,9 @@ Flags live under `features` in `app.config.ts`. Wrap flagged page content in `::
 
 `components/content/NatureMap.vue`: Leaflet map of iNaturalist observations, fetched in the browser from the public API (no backend). Settings under `nature` in `app.config.ts`: `projectSlug` (empty → search the box around the mapped areas and keep only sightings inside them) and `protectedGenera` (edible species shown only as ~150 m areas). The areas (park, Woodmont neighborhood, community centers & watershed) are outlines traced in Google My Maps, stored in `data/nature-areas.ts` as [lng, lat] rings; they also drive the "All areas" filter. Observations iNaturalist obscures or marks private are left off the map and counted in a note. Basemaps: OpenStreetMap tiles and Esri World Imagery (keep their attributions).
 
-Roadmap: add an admin backend for content management (stack TBD).
+## Projects board (`/projects`, flag `projectsBoard`)
+
+`components/content/FwpProjects.vue` (`::fwp-projects`) fetches `publicBoardUrl` in `app.config.ts` (`https://admin.woodmontfriends.org/api/public/board`) in the browser, so board changes show without a rebuild. The admin app (private repo `fwp-admin`) is the single source of truth: a card appears here only when it has the `public` label, and only its title, column (Planned / In progress / Recently done), target month and topic chips leave the app. With the flag on, the header gets a Projects link and the footer's roadmap link points here instead of the old GitHub Projects board. At launch, also repoint the GitHub roadmap links in `content/1.index.md` and `content/2.board.md` to `/projects`.
 
 ## Google Drive (private)
 
