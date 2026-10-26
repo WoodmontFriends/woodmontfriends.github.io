@@ -58,7 +58,8 @@ yarn generate   # static build → ./dist
   - `::event-list` > `::event-item{month day weekday title}` — date-block events.
   - `::trail` > `::trail-stop{title}` — the phased plan, drawn as a trail with blaze markers. Only for content that really is a sequence.
   - `::help-list` > `::help-item{title}` — two-column list of ways to help.
-  - `::contact-band{title}` — dark sign-up call-to-action, plus the email address with a Copy button (`components/EmailAddress.vue`; mailto alone does nothing on computers without a mail app).
+  - `::contact-band{title}` — dark sign-up call-to-action, plus the email address with a Copy button (`components/EmailAddress.vue`; mailto alone does nothing on computers without a mail app) and the community calendar subscribe links.
+  - `::calendar-callout{title}` — dark "add our calendar" card with Google and Apple/Outlook subscribe buttons for the public FWP Community Events calendar (`communityCalendarId` in `app.config.ts`, links built in `composables/useCommunityCalendar.ts`); body is optional copy. Used on the home page and `/projects`.
 - Sign-ups go to a Google Form (`signupUrl` in `app.config.ts`) stored in the FWP Board Internal shared drive: name, email, volunteer interests, and a free-text note.
 - Site shell: `components/AppLayout.vue` (header + footer) and `layouts/default.vue` override the Content Wind theme's blog chrome.
 - Design: tokens and base styles in `assets/css/park.css`. Hemlock green `#1f3a2e`, blaze yellow `#f2c230` (the only accent: logo mark, main buttons, trail markers), fern tint `#eef3ec`. Zilla Slab headings and Public Sans body text, loaded from Google Fonts in `nuxt.config.ts`. Light mode only.

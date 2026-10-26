@@ -8,6 +8,8 @@ export default defineAppConfig({
   publicBoardUrl: 'https://admin.woodmontfriends.org/api/public/board',
   // Upcoming events on the public "FWP Community Events" Google Calendar, from the admin app
   publicEventsUrl: 'https://admin.woodmontfriends.org/api/public/events',
+  // The public "FWP Community Events" Google Calendar (not secret). Used by ::calendar-callout.
+  communityCalendarId: 'c_9b7954698fc7de9a49e33094532028cee2a1929e20e57786f3720baac1a96e50@group.calendar.google.com',
 
   // Feature flags. A flag that's off can be previewed with ?flag=<name>, e.g. /nature?flag=natureMap
   features: {
