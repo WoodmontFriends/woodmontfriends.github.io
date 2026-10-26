@@ -13,6 +13,7 @@ interface PublicCard {
 interface PublicBoard {
   updatedAt: string
   columns: Record<Column, PublicCard[]>
+  archive?: PublicCard[] // finished more than 60 days ago, newest first
 }
 
 const { publicBoardUrl, email } = useAppConfig() as { publicBoardUrl: string; email: string }
@@ -25,7 +26,13 @@ const columns: { key: Column; title: string; empty: string }[] = [
   { key: 'done', title: 'Recently done', empty: 'Nothing finished in the last two months.' },
 ]
 
-const total = computed(() => (board.value ? columns.reduce((n, c) => n + board.value!.columns[c.key].length, 0) : 0))
+const archive = computed(() => board.value?.archive ?? [])
+const total = computed(() => (board.value ? columns.reduce((n, c) => n + board.value!.columns[c.key].length, 0) + archive.value.length : 0))
+
+function finished(updated: string) {
+  const d = new Date(`${updated}T12:00:00`)
+  return Number.isNaN(d.getTime()) ? '' : d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+}
 
 function month(target: string) {
   const d = new Date(`${target}-15T12:00:00`)
@@ -72,6 +79,18 @@ onMounted(async () => {
         <p v-else class="empty">{{ col.empty }}</p>
       </section>
     </div>
+    <details v-if="archive.length" class="archive">
+      <summary>Everything else we've finished <span class="count">{{ archive.length }}</span></summary>
+      <ul class="archive-list">
+        <li v-for="card in archive" :key="card.id" class="archive-item">
+          <span class="archive-title">{{ card.title }}</span>
+          <span class="archive-meta">
+            <span v-for="t in card.topics" :key="t" class="topic">{{ t }}</span>
+            <span class="archive-date">{{ finished(card.updated) }}</span>
+          </span>
+        </li>
+      </ul>
+    </details>
   </div>
 </template>
 
@@ -154,6 +173,63 @@ onMounted(async () => {
   background: var(--fern);
   border-radius: 999px;
   padding: 0.1rem 0.6rem;
+}
+.archive {
+  margin-top: 2rem;
+  border-top: 1px solid var(--rule);
+  padding-top: 1rem;
+}
+.archive summary {
+  list-style: none;
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--hemlock);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.archive summary::-webkit-details-marker {
+  display: none;
+}
+.archive summary::before {
+  content: '▸';
+  display: inline-block;
+  transition: transform 0.15s;
+}
+.archive[open] summary::before {
+  transform: rotate(90deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .archive summary::before {
+    transition: none;
+  }
+}
+.archive-list {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+}
+.archive-item {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.archive-title::before {
+  content: '✓ ';
+  color: var(--hemlock);
+}
+.archive-meta {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+}
+.archive-date {
+  font-size: 0.9rem;
+  color: var(--ink-soft);
 }
 .empty,
 .note {
