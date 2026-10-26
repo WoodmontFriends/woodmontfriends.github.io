@@ -7,7 +7,7 @@
 <style scoped>
 .trail {
   list-style: none;
-  margin: 2rem 0 0;
+  margin: 2rem 0;
   padding: 0;
   max-width: 42rem;
 }

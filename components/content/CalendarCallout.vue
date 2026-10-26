@@ -4,12 +4,13 @@
 defineProps({
   id: { type: String, default: 'calendar' }, // anchor, e.g. the home hero links to #calendar
   title: { type: String, default: 'Never miss a park day' },
+  compact: { type: Boolean, default: false }, // narrower card for a side column
 })
 const { google, ics, web } = useCommunityCalendar()
 </script>
 
 <template>
-  <aside :id="id" class="callout" aria-labelledby="calendar-callout-title">
+  <aside :id="id" class="callout" :class="{ compact }" aria-labelledby="calendar-callout-title">
     <span class="mark" aria-hidden="true">
       <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="4.5" width="18" height="16.5" rx="2" />
@@ -75,6 +76,22 @@ const { google, ics, web } = useCommunityCalendar()
 .view {
   color: var(--on-dark);
   font-weight: 600;
+}
+.compact {
+  flex-direction: column;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 1.2rem 1.25rem;
+}
+.compact .title {
+  font-size: 1.25rem;
+}
+.compact .text {
+  font-size: 0.95rem;
+}
+.compact .actions .btn {
+  width: 100%;
+  justify-content: center;
 }
 @media (max-width: 520px) {
   .callout {

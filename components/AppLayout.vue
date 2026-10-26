@@ -107,6 +107,20 @@ const natureMap = useFeature('natureMap')
   font-size: 0.95rem;
   white-space: nowrap;
 }
+/* Phones: the name gets its own line and the links sit in a row below it. */
+@media (max-width: 639px) {
+  .header-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+    padding-top: 0.75rem; /* top/bottom only: .wrap supplies the side gutter */
+    padding-bottom: 0.75rem;
+  }
+  .header-links {
+    justify-content: flex-start;
+    gap: 0.25rem 1.1rem;
+  }
+}
 
 .site-footer {
   background: var(--fern);

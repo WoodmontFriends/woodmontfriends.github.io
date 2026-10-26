@@ -20,6 +20,10 @@ defineProps({
           <ContentSlot :use="$slots.aside" />
         </aside>
       </div>
+      <!-- #full: full-width content below the text + aside columns (e.g. the projects board). -->
+      <div v-if="$slots.full" class="full-row">
+        <ContentSlot :use="$slots.full" />
+      </div>
     </div>
   </section>
 </template>
@@ -47,5 +51,8 @@ defineProps({
     gap: 4rem;
     align-items: start;
   }
+}
+.full-row {
+  margin-top: 0.5rem;
 }
 </style>
