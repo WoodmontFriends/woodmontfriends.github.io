@@ -2,6 +2,7 @@
 const { cover, signupUrl, roadmapUrl } = useAppConfig()
 const year = new Date().getFullYear()
 const natureMap = useFeature('natureMap')
+const projectsBoard = useFeature('projectsBoard')
 </script>
 
 <template>
@@ -17,6 +18,7 @@ const natureMap = useFeature('natureMap')
           <span>Friends of Woodmont Park</span>
         </NuxtLink>
         <nav class="header-links" aria-label="Site">
+          <NuxtLink v-if="projectsBoard" class="header-link" to="/projects">Projects</NuxtLink>
           <NuxtLink v-if="natureMap" class="header-link" to="/nature">Nature map</NuxtLink>
           <NuxtLink class="header-link" to="/board">Board portal</NuxtLink>
           <a class="header-link" :href="signupUrl" target="_blank" rel="noopener noreferrer">Get updates</a>
@@ -40,7 +42,10 @@ const natureMap = useFeature('natureMap')
             Our 501(c)(3) application is pending, so donations are not yet tax-deductible.
           </p>
           <p><EmailAddress /></p>
-          <p><a :href="roadmapUrl">See our community roadmap</a></p>
+          <p>
+            <NuxtLink v-if="projectsBoard" to="/projects">See what we're working on</NuxtLink>
+            <a v-else :href="roadmapUrl">See our community roadmap</a>
+          </p>
           <p><NuxtLink to="/board">Board portal sign-in</NuxtLink></p>
         </div>
         <div class="footer-partners">
