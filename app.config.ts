@@ -4,8 +4,6 @@ export default defineAppConfig({
   email: 'info@woodmontfriends.org',
   // Google Form in the FWP Board Internal shared drive ("FWP Sign-ups (website + Fall Fest)")
   signupUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSfnm6BANJCPeBfbAIajsnJIINk3fJl5o6F-wxD9--0qofDM4Q/viewform',
-  // Public GitHub Projects board ("Community Roadmap")
-  roadmapUrl: 'https://github.com/orgs/WoodmontFriends/projects/2',
   // Public projects feed from the admin app: cards labelled "public" (fwp-admin lib/public-board.ts)
   publicBoardUrl: 'https://admin.woodmontfriends.org/api/public/board',
   // Upcoming events on the public "FWP Community Events" Google Calendar, from the admin app
@@ -15,9 +13,6 @@ export default defineAppConfig({
   features: {
     // Park nature map at /nature (sightings from iNaturalist). Turning it on also adds it to the header.
     natureMap: false,
-    // Projects board at /projects, fed by the admin app. Turning it on adds it to the header and
-    // points the footer's roadmap link there instead of GitHub.
-    projectsBoard: false,
   },
 
   // Park nature map settings
