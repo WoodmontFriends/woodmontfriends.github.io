@@ -4,6 +4,7 @@ defineProps({
   title: { type: String, required: true },
 })
 const { signupUrl } = useAppConfig()
+const calendar = useCommunityCalendar()
 </script>
 
 <template>
@@ -15,6 +16,12 @@ const { signupUrl } = useAppConfig()
       </div>
       <a class="btn btn-blaze" :href="signupUrl" target="_blank" rel="noopener noreferrer">Sign up for updates</a>
       <p class="band-email">Or email us at <EmailAddress /></p>
+      <p class="band-calendar">
+        Add our events to your calendar:
+        <a :href="calendar.google" target="_blank" rel="noopener noreferrer">Google Calendar</a>
+        ·
+        <a :href="calendar.ics">Apple or Outlook</a>
+      </p>
     </div>
   </section>
 </template>
@@ -43,7 +50,12 @@ const { signupUrl } = useAppConfig()
   margin: 1.5rem 0 0;
   color: var(--on-dark-soft);
 }
-.band-email :deep(a) {
+.band-email :deep(a),
+.band-calendar a {
   color: var(--on-dark);
+}
+.band-calendar {
+  margin: 0.5rem 0 0;
+  color: var(--on-dark-soft);
 }
 </style>
