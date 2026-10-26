@@ -38,7 +38,7 @@ Restore the old tennis courts behind the WRA pool into a **multi-use sport court
 
 Nuxt 3 + Content Wind (@nuxt/content v2, Markdown + MDC) + TailwindCSS + Pinceau (primary: emerald) · Yarn. Same stack family as the WCA site (`~/repos/woodmont-civic.github.io`) but intentionally leaner — no PWA/SEO modules yet.
 
-**Analytics**: Google Analytics 4 via `nuxt-gtag` (same as WCA). The measurement ID is `gaMeasurementId` at the top of `nuxt.config.ts`; the tag is off while it's empty. GA4 enhanced measurement records page views and outbound clicks (sign-up form, roadmap) with no extra code.
+**Analytics**: Google Analytics 4 via `nuxt-gtag` (same as WCA). The measurement ID is `gaMeasurementId` at the top of `nuxt.config.ts`; the tag is off while it's empty. GA4 enhanced measurement records page views and outbound clicks (sign-up form) with no extra code.
 
 ```bash
 yarn install    # deps
@@ -72,9 +72,9 @@ Flags live under `features` in `app.config.ts`. Wrap flagged page content in `::
 
 `components/content/NatureMap.vue`: Leaflet map of iNaturalist observations, fetched in the browser from the public API (no backend). Settings under `nature` in `app.config.ts`: `projectSlug` (empty → search the box around the mapped areas and keep only sightings inside them) and `protectedGenera` (edible species shown only as ~150 m areas). The areas (park, Woodmont neighborhood, community centers & watershed) are outlines traced in Google My Maps, stored in `data/nature-areas.ts` as [lng, lat] rings; they also drive the "All areas" filter. Observations iNaturalist obscures or marks private are left off the map and counted in a note. Basemaps: OpenStreetMap tiles and Esri World Imagery (keep their attributions).
 
-## Projects board (`/projects`, flag `projectsBoard`)
+## Projects page (`/projects`)
 
-`components/content/FwpProjects.vue` (`::fwp-projects`) fetches `publicBoardUrl` in `app.config.ts` (`https://admin.woodmontfriends.org/api/public/board`) in the browser, so board changes show without a rebuild. The admin app (private repo `fwp-admin`) is the single source of truth: a card appears here only when it has the `public` label, and only its title, column (Planned / In progress / Recently done), target month and topic chips leave the app. With the flag on, the header gets a Projects link and the footer's roadmap link points here instead of the old GitHub Projects board. At launch, also repoint the GitHub roadmap links in `content/1.index.md` and `content/2.board.md` to `/projects`.
+`components/content/FwpProjects.vue` (`::fwp-projects`) fetches `publicBoardUrl` in `app.config.ts` (`https://admin.woodmontfriends.org/api/public/board`) in the browser, so board changes show without a rebuild. The admin app (private repo `fwp-admin`) is the single source of truth: a card appears here only when it has the `public` label, and only its title, column (Planned / In progress / Recently done), target month and topic chips leave the app. Finished cards older than 60 days come back as `archive` and show in a collapsed list. `components/content/FwpEvents.vue` (`::fwp-events`) lists upcoming events from `publicEventsUrl` (the public "FWP Community Events" Google Calendar, fed by public cards with a due date) with subscribe links; it renders nothing while the admin app reports the calendar off. The header, footer, home page and board page all link here; the old GitHub Projects board is retired.
 
 ## Google Drive (private)
 
