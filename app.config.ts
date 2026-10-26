@@ -8,6 +8,8 @@ export default defineAppConfig({
   roadmapUrl: 'https://github.com/orgs/WoodmontFriends/projects/2',
   // Public projects feed from the admin app: cards labelled "public" (fwp-admin lib/public-board.ts)
   publicBoardUrl: 'https://admin.woodmontfriends.org/api/public/board',
+  // Upcoming events on the public "FWP Community Events" Google Calendar, from the admin app
+  publicEventsUrl: 'https://admin.woodmontfriends.org/api/public/events',
 
   // Feature flags. A flag that's off can be previewed with ?flag=<name>, e.g. /nature?flag=natureMap
   features: {
