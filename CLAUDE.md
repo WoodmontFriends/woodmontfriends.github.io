@@ -73,7 +73,7 @@ Flags live under `features` in `app.config.ts`. Wrap flagged page content in `::
 
 `components/content/NatureMap.vue`: Leaflet map of iNaturalist observations, fetched in the browser from the public API (no backend). Settings under `nature` in `app.config.ts`: `projectSlug` (empty → search the box around the mapped areas and keep only sightings inside them) and `protectedGenera` (edible species shown only as ~150 m areas). The areas (park, Woodmont neighborhood, community centers & watershed) are outlines traced in Google My Maps, stored in `data/nature-areas.ts` as [lng, lat] rings; they also drive the "All areas" filter. Observations iNaturalist obscures or marks private are left off the map and counted in a note. Basemaps: OpenStreetMap tiles and Esri World Imagery (keep their attributions).
 
-## Park explorer (`/explore`, flag `parkModel`)
+## Park explorer (`/explore`)
 
 `content/5.explore.md`: the trail flythrough video (`::park-video`, `components/content/ParkVideo.vue`) and the 3D explorer (`::park-explorer`, `components/content/ParkExplorer.vue`, three.js). The explorer shows a poster with an "Explore in 3D" button and downloads nothing until it's pressed. Assets live in `public/explore/`: `park.glb` (Draco-compressed model; decoder in `draco/`), `height.bin` (ground heights for walk mode: int16 centimetres, row 0 = north), `meta.json` (grid size, viewpoints, trail tour path in three.js coordinates), `park-overview.jpg` (explorer poster), `trail-flythrough.mp4` and its poster `trail-flythrough.jpg`.
 
