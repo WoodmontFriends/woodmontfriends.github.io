@@ -281,6 +281,11 @@ async function boot() {
   }
 }
 
+function pickPreset(e: Event) {
+  const el = e.target as HTMLSelectElement
+  if (el.value) api?.goTo(el.value)
+  el.value = ''
+}
 function seekFromClick(e: MouseEvent) {
   const r = (e.currentTarget as HTMLElement).getBoundingClientRect()
   api?.seek((e.clientX - r.left) / r.width)
@@ -324,7 +329,11 @@ onBeforeUnmount(() => cleanup?.())
       <div class="dock">
         <div class="panel" role="group" aria-label="Viewpoints">
           <span class="label">Go to</span>
-          <button v-for="n in presetNames" :key="n" type="button" @click="api?.goTo(n)">{{ n }}</button>
+          <button v-for="n in presetNames" :key="n" type="button" class="preset-btn" @click="api?.goTo(n)">{{ n }}</button>
+          <select class="preset-select" aria-label="Go to a viewpoint" @change="pickPreset">
+            <option value="">Go to…</option>
+            <option v-for="n in presetNames" :key="n" :value="n">{{ n }}</option>
+          </select>
         </div>
         <div class="panel grow">
           <button type="button" class="btn-blaze small" @click="api?.toggleTour()">{{ touring ? 'Pause' : 'Follow the trail' }}</button>
@@ -341,7 +350,10 @@ onBeforeUnmount(() => cleanup?.())
             <button type="button" aria-label="Move forward" @pointerdown.prevent="api?.hold(1)" @pointerup="api?.hold(0)" @pointerleave="api?.hold(0)" @pointercancel="api?.hold(0)">▲</button>
             <button type="button" aria-label="Move back" @pointerdown.prevent="api?.hold(-1)" @pointerup="api?.hold(0)" @pointerleave="api?.hold(0)" @pointercancel="api?.hold(0)">▼</button>
           </span>
-          <button type="button" @click="fullscreen">Full screen</button>
+          <button type="button" class="fs-btn" aria-label="Full screen" @click="fullscreen">
+            <span class="fs-text">Full screen</span>
+            <svg class="fs-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 8V3h5M12 3h5v5M17 12v5h-5M8 17H3v-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          </button>
         </div>
       </div>
     </template>
@@ -521,6 +533,21 @@ kbd {
   display: none;
   gap: 0.35rem;
 }
+.fs-icon {
+  display: none;
+  width: 1rem;
+  height: 1rem;
+}
+.preset-select {
+  display: none;
+  font: 500 0.85rem var(--font-body);
+  color: var(--on-dark);
+  background: #2b4d3d;
+  border: 1px solid rgba(233, 240, 234, 0.18);
+  border-radius: 8px;
+  padding: 0 0.5rem;
+  min-height: 2.5rem;
+}
 @media (hover: none) {
   .touchpad {
     display: flex;
@@ -528,13 +555,61 @@ kbd {
   .keys {
     display: none;
   }
+  button {
+    min-height: 2.5rem;
+  }
+  .touchpad button {
+    min-width: 2.75rem;
+  }
 }
+/* Phones: one picker for viewpoints and two short rows of controls, so the view stays open. */
 @media (max-width: 640px) {
   .explorer {
     height: 82vh;
+    height: 82svh;
+    min-height: 380px;
   }
   .help {
     display: none;
+  }
+  .dock {
+    left: 0.5rem;
+    right: 0.5rem;
+    bottom: 0.5rem;
+    gap: 0.35rem;
+  }
+  .panel {
+    padding: 0.3rem;
+    gap: 0.3rem;
+  }
+  .label,
+  .preset-btn {
+    display: none;
+  }
+  .preset-select {
+    display: block;
+  }
+  .panel.grow {
+    flex: 1 1 12rem;
+  }
+  .progress {
+    flex: 1 1 3rem;
+  }
+  .feet,
+  .fs-text {
+    display: none;
+  }
+  .fs-icon {
+    display: block;
+  }
+  button {
+    padding: 0.5rem 0.6rem;
+  }
+  .fs-btn,
+  .touchpad button {
+    min-width: 2.5rem;
+    display: grid;
+    place-items: center;
   }
 }
 </style>

@@ -651,6 +651,7 @@ const listed = computed(() => visible.value.slice(0, 60))
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
+  min-height: 2.5rem; /* comfortable tap target on phones */
   font-weight: 600;
   font-size: 0.95rem;
   cursor: pointer;
