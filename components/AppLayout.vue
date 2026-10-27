@@ -1,7 +1,6 @@
 <script setup lang="ts">
 const { cover, signupUrl } = useAppConfig()
 const year = new Date().getFullYear()
-const natureMap = useFeature('natureMap')
 const parkModel = useFeature('parkModel')
 
 // Phones get a Menu button; wider screens show the links in a row. Close the menu on navigation and Escape.
@@ -39,7 +38,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
         </button>
         <nav id="site-nav" class="header-links" :class="{ open: menuOpen }" aria-label="Site">
           <NuxtLink class="header-link" to="/projects">Projects</NuxtLink>
-          <NuxtLink v-if="natureMap" class="header-link" to="/nature">Nature map</NuxtLink>
+          <NuxtLink class="header-link" to="/nature">Nature map</NuxtLink>
           <NuxtLink v-if="parkModel" class="header-link" to="/explore">Explore in 3D</NuxtLink>
           <NuxtLink class="header-link" to="/board">Board portal</NuxtLink>
           <a class="header-link" :href="signupUrl" target="_blank" rel="noopener noreferrer">Get updates</a>
