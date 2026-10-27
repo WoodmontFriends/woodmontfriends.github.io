@@ -12,10 +12,7 @@ export default defineAppConfig({
   communityCalendarId: 'c_9b7954698fc7de9a49e33094532028cee2a1929e20e57786f3720baac1a96e50@group.calendar.google.com',
 
   // Feature flags. A flag that's off can be previewed with ?flag=<name>, e.g. /nature?flag=natureMap
-  features: {
-    // Park nature map at /nature (sightings from iNaturalist). Turning it on also adds it to the header.
-    natureMap: false,
-  },
+  features: {},
 
   // Park nature map settings
   nature: {

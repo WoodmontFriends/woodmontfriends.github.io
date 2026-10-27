@@ -69,7 +69,7 @@ yarn generate   # static build → ./dist
 
 Flags live under `features` in `app.config.ts`. Wrap flagged page content in `::feature-flag{name="..."}` (default slot when on, `#off` slot otherwise); off pages get `noindex`. Preview a flag that's off with `?flag=<name>` (remembered in that browser; `?flag=off` clears it). Don't use `?preview=`, since Nuxt Content claims it for its own preview mode. Unlinked flagged pages need adding to `nitro.prerender.routes` in `nuxt.config.ts`.
 
-## Nature map (`/nature`, flag `natureMap`)
+## Nature map (`/nature`)
 
 `components/content/NatureMap.vue`: Leaflet map of iNaturalist observations, fetched in the browser from the public API (no backend). Settings under `nature` in `app.config.ts`: `projectSlug` (empty → search the box around the mapped areas and keep only sightings inside them) and `protectedGenera` (edible species shown only as ~150 m areas). The areas (park, Woodmont neighborhood, community centers & watershed) are outlines traced in Google My Maps, stored in `data/nature-areas.ts` as [lng, lat] rings; they also drive the "All areas" filter. Observations iNaturalist obscures or marks private are left off the map and counted in a note. Basemaps: OpenStreetMap tiles and Esri World Imagery (keep their attributions).
 
