@@ -15,6 +15,8 @@ export default defineAppConfig({
   features: {
     // Park nature map at /nature (sightings from iNaturalist). Turning it on also adds it to the header.
     natureMap: false,
+    // 3D park explorer and trail flythrough at /explore. Turning it on also adds it to the header.
+    parkModel: false,
   },
 
   // Park nature map settings
