@@ -61,7 +61,7 @@ yarn generate   # static build → ./dist
   - `::contact-band{title}` — dark sign-up call-to-action, plus the email address with a Copy button (`components/EmailAddress.vue`; mailto alone does nothing on computers without a mail app) and the community calendar subscribe links.
   - `::calendar-callout{title}` — dark "add our calendar" card with Google and Apple/Outlook subscribe buttons for the public FWP Community Events calendar (`communityCalendarId` in `app.config.ts`, links built in `composables/useCommunityCalendar.ts`); body is optional copy. Used on the home page and `/projects`.
 - Sign-ups go to a Google Form (`signupUrl` in `app.config.ts`) stored in the FWP Board Internal shared drive: name, email, volunteer interests, and a free-text note.
-- Site shell: `components/AppLayout.vue` (header + footer) and `layouts/default.vue` override the Content Wind theme's blog chrome.
+- Site shell: `components/AppLayout.vue` (header + footer) and `layouts/default.vue` override the Content Wind theme's blog chrome. Below 760px the header links collapse behind a Menu button (icon-only under 380px) that opens a full-width list; keep tap targets at least ~40px tall when adding links or controls.
 - Design: tokens and base styles in `assets/css/park.css`. Hemlock green `#1f3a2e`, blaze yellow `#f2c230` (the only accent: logo mark, main buttons, trail markers), fern tint `#eef3ec`. Zilla Slab headings and Public Sans body text, loaded from Google Fonts in `nuxt.config.ts`. Light mode only.
 - Preview: `yarn generate`, then serve `dist/` (e.g. `python3 -m http.server` inside it). `yarn dev` has shown Nuxt's welcome page instead of the site.
 
@@ -72,6 +72,12 @@ Flags live under `features` in `app.config.ts`. Wrap flagged page content in `::
 ## Nature map (`/nature`)
 
 `components/content/NatureMap.vue`: Leaflet map of iNaturalist observations, fetched in the browser from the public API (no backend). Settings under `nature` in `app.config.ts`: `projectSlug` (empty → search the box around the mapped areas and keep only sightings inside them) and `protectedGenera` (edible species shown only as ~150 m areas). The areas (park, Woodmont neighborhood, community centers & watershed) are outlines traced in Google My Maps, stored in `data/nature-areas.ts` as [lng, lat] rings; they also drive the "All areas" filter. Observations iNaturalist obscures or marks private are left off the map and counted in a note. Basemaps: OpenStreetMap tiles and Esri World Imagery (keep their attributions).
+
+## Park explorer (`/explore`, flag `parkModel`)
+
+`content/5.explore.md`: the trail flythrough video (`::park-video`, `components/content/ParkVideo.vue`) and the 3D explorer (`::park-explorer`, `components/content/ParkExplorer.vue`, three.js). The explorer shows a poster with an "Explore in 3D" button and downloads nothing until it's pressed. Assets live in `public/explore/`: `park.glb` (Draco-compressed model; decoder in `draco/`), `height.bin` (ground heights for walk mode: int16 centimetres, row 0 = north), `meta.json` (grid size, viewpoints, trail tour path in three.js coordinates), `park-overview.jpg` (explorer poster), `trail-flythrough.mp4` and its poster `trail-flythrough.jpg`.
+
+All of these are exported from the Blender model in the FWP Board Internal drive (`Site Plans / 3D model/woodmont_park_existing.blend`). Its `REBUILD_FROM_GUIDES` script and helper module rebuild the scene from editable outlines; re-export the glTF and meta files from Blender and copy them here rather than editing them by hand. Data credits on the page (USGS 3DEP lidar, © OpenStreetMap contributors) must stay. The model is a sketch of the park today; don't present it as a survey or as the plan for the courts.
 
 ## Projects page (`/projects`)
 

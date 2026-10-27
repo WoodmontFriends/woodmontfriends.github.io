@@ -1,6 +1,17 @@
 <script setup lang="ts">
 const { cover, signupUrl } = useAppConfig()
 const year = new Date().getFullYear()
+const parkModel = useFeature('parkModel')
+
+// Phones get a Menu button; wider screens show the links in a row. Close the menu on navigation and Escape.
+const menuOpen = ref(false)
+const route = useRoute()
+watch(() => route.fullPath, () => { menuOpen.value = false })
+function onKey(e: KeyboardEvent) {
+  if (e.key === 'Escape' && menuOpen.value) menuOpen.value = false
+}
+onMounted(() => window.addEventListener('keydown', onKey))
+onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
 </script>
 
 <template>
@@ -15,9 +26,20 @@ const year = new Date().getFullYear()
           <span class="blaze" aria-hidden="true" />
           <span>Friends of Woodmont Park</span>
         </NuxtLink>
-        <nav class="header-links" aria-label="Site">
+        <button
+          type="button"
+          class="menu-toggle"
+          :aria-expanded="menuOpen"
+          aria-controls="site-nav"
+          @click="menuOpen = !menuOpen"
+        >
+          <span class="menu-icon" :class="{ open: menuOpen }" aria-hidden="true"><i /><i /><i /></span>
+          <span class="menu-label">{{ menuOpen ? 'Close' : 'Menu' }}</span>
+        </button>
+        <nav id="site-nav" class="header-links" :class="{ open: menuOpen }" aria-label="Site">
           <NuxtLink class="header-link" to="/projects">Projects</NuxtLink>
           <NuxtLink class="header-link" to="/nature">Nature map</NuxtLink>
+          <NuxtLink v-if="parkModel" class="header-link" to="/explore">Explore in 3D</NuxtLink>
           <NuxtLink class="header-link" to="/board">Board portal</NuxtLink>
           <a class="header-link" :href="signupUrl" target="_blank" rel="noopener noreferrer">Get updates</a>
         </nav>
@@ -106,18 +128,98 @@ const year = new Date().getFullYear()
   font-size: 0.95rem;
   white-space: nowrap;
 }
-/* Phones: the name gets its own line and the links sit in a row below it. */
-@media (max-width: 639px) {
+.menu-toggle {
+  display: none;
+}
+/* Phones and small tablets: a Menu button opens the links as a full-width list under the bar. */
+@media (max-width: 759px) {
   .header-inner {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.35rem;
-    padding-top: 0.75rem; /* top/bottom only: .wrap supplies the side gutter */
-    padding-bottom: 0.75rem;
+    flex-wrap: wrap;
+    gap: 0;
+  }
+  .brand {
+    min-height: 3.5rem;
+    font-size: 1.05rem;
+  }
+  .menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-height: 2.75rem;
+    padding: 0 0.85rem;
+    margin-right: -0.5rem;
+    border: 1px solid rgba(233, 240, 234, 0.35);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--on-dark);
+    font: 600 0.95rem var(--font-body);
+    cursor: pointer;
+  }
+  .menu-icon {
+    display: inline-grid;
+    gap: 3px;
+    width: 1rem;
+  }
+  .menu-icon i {
+    display: block;
+    height: 2px;
+    border-radius: 1px;
+    background: currentColor;
+    transition: transform 0.2s, opacity 0.2s;
+  }
+  .menu-icon.open i:nth-child(1) {
+    transform: translateY(5px) rotate(45deg);
+  }
+  .menu-icon.open i:nth-child(2) {
+    opacity: 0;
+  }
+  .menu-icon.open i:nth-child(3) {
+    transform: translateY(-5px) rotate(-45deg);
   }
   .header-links {
-    justify-content: flex-start;
-    gap: 0.25rem 1.1rem;
+    display: none;
+    flex-basis: 100%;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 0;
+    padding-bottom: 0.5rem;
+  }
+  .header-links.open {
+    display: flex;
+  }
+  .header-link {
+    display: flex;
+    align-items: center;
+    min-height: 3rem;
+    border-top: 1px solid rgba(233, 240, 234, 0.14);
+    font-size: 1.05rem;
+    text-decoration: none;
+  }
+  .header-link.router-link-active {
+    color: var(--blaze);
+  }
+}
+/* The narrowest phones: keep the name and the button on one line; the label stays for screen readers. */
+@media (max-width: 380px) {
+  .brand {
+    gap: 0.5rem;
+    font-size: 0.98rem;
+  }
+  .menu-toggle {
+    padding: 0 0.75rem;
+  }
+  .menu-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .menu-icon i {
+    transition: none;
   }
 }
 

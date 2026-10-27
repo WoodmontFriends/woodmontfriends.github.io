@@ -532,11 +532,11 @@ onUnmounted(() => {
   gap: 0.15rem;
 }
 
-/* Large 28px touch target area for mobile tap, compact 7px visual dot */
+/* Large ~32px touch target area for mobile tap, compact 7px visual dot */
 .dot-btn-wrapper {
   background: transparent;
   border: none;
-  padding: 0.4rem 0.25rem;
+  padding: 0.75rem 0.35rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -564,6 +564,8 @@ onUnmounted(() => {
   color: var(--on-dark);
   cursor: pointer;
   padding: 0.2rem;
+  min-width: 2rem;
+  min-height: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;

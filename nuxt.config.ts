@@ -18,7 +18,7 @@ export default defineNuxtConfig({
     prerender: {
       failOnError: false,
       // Pages behind a feature flag aren't linked anywhere yet, so the crawler won't find them.
-      routes: [],
+      routes: ['/explore'],
     },
   },
   app: {
