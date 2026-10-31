@@ -314,7 +314,7 @@ onBeforeUnmount(() => cleanup?.())
         </template>
         <template v-else>
           <p class="cover-title">Walk the park in 3D</p>
-          <p class="cover-note">Fly over the woods, follow the trail, or stroll the courts. About a 3.5 MB download.</p>
+          <p class="cover-note">Fly over the woods, follow the trail, or look around the courts. About a 3.5 MB download.</p>
           <p v-if="status === 'error'" class="cover-error">{{ errorText }}</p>
           <button type="button" class="btn-blaze" @click="start">{{ status === 'error' ? 'Try again' : 'Explore in 3D' }}</button>
         </template>

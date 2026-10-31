@@ -3,7 +3,7 @@
 // calendar. Body text (optional) is the slot; the links are built from communityCalendarId.
 defineProps({
   id: { type: String, default: 'calendar' }, // anchor, e.g. the home hero links to #calendar
-  title: { type: String, default: 'Never miss a park day' },
+  title: { type: String, default: 'Add our calendar' },
   compact: { type: Boolean, default: false }, // narrower card for a side column
 })
 const { google, ics, web } = useCommunityCalendar()
