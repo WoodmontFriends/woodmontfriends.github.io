@@ -15,7 +15,7 @@ The user (Gabe) is a founding director of FWP and **President of the Woodmont Ci
 
 Apply the same lens as WCA work — welcoming, professional, optimistic; "how does this help our neighbors?"; don't over-engineer (volunteer-run org); spelling/grammar must be perfect on anything public.
 
-**Public-repo rule**: everything in this repo is public. Board-internal material (legal docs, finance, meeting notes, personal details) lives in the Google Drive shared drive, never here. Board members are referred to by first name only.
+**Public-repo rule**: everything in this repo is public. Board-internal material (legal docs, finance, meeting notes, personal details) lives in the Google Drive shared drive, never here. Board members appear by full name on the public board page (`/board`); keep their personal details (home addresses, personal phone numbers or emails) out of the repo.
 
 ## Sister organizations
 
@@ -58,7 +58,7 @@ yarn generate   # static build → ./dist
   - `::event-list` > `::event-item{month day weekday title}` — date-block events.
   - `::trail` > `::trail-stop{title}` — the phased plan, drawn as a trail with blaze markers. Only for content that really is a sequence.
   - `::help-list` > `::help-item{title}` — two-column list of ways to help.
-  - `::board-list{title}` > `::board-member{name role photo}` — the board in the "Who we are" section. `photo` (a path in `public/`) and a bio in the body are optional; members show by first name until the board agrees otherwise.
+  - `::board-list{title}` > `::board-member{name role photo}` — board profiles on `/board`, above the portal sign-in. `photo` (a path in `public/`, e.g. `public/images/board/`) and a bio in the body are optional; without a photo the member's initials show in a circle. The home page links to `/board` from "Who we are".
   - `::contact-band{title}` — dark sign-up call-to-action, plus the email address with a Copy button (`components/EmailAddress.vue`; mailto alone does nothing on computers without a mail app) and the community calendar subscribe links.
   - `::calendar-callout{title}` — dark "add our calendar" card with Google and Apple/Outlook subscribe buttons for the public FWP Community Events calendar (`communityCalendarId` in `app.config.ts`, links built in `composables/useCommunityCalendar.ts`); body is optional copy. Used on the home page and `/projects`.
 - Sign-ups go to a Google Form (`signupUrl` in `app.config.ts`) stored in the FWP Board Internal shared drive: name, email, volunteer interests, and a free-text note.
