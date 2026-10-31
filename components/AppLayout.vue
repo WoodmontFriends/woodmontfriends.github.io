@@ -58,7 +58,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
           </p>
           <p>
             A Virginia nonstock corporation serving the Woodmont neighborhood of North Chesterfield, VA.
-            Our 501(c)(3) application is pending, so donations are not yet tax-deductible.
+            A 501(c)(3) tax-exempt organization; donations are tax-deductible to the extent allowed by law.
           </p>
           <p><EmailAddress /></p>
           <p><NuxtLink to="/projects">See what we're working on</NuxtLink></p>
