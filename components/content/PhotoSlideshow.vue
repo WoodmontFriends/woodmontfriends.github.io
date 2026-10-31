@@ -19,50 +19,50 @@ const defaultPhotos: PhotoItem[] = [
   {
     src: '/images/photo-1.jpg',
     alt: 'Shaded wooded trail with pine trees and green ground cover',
-    title: 'Wooded Trail System',
-    caption: 'Quiet walking paths winding through the forest behind the pool'
+    title: 'Trail in the woods',
+    caption: 'One of the trails behind the pool'
   },
   {
     src: '/images/photo-2.jpg',
     alt: 'Newly built wooden footbridge over a small creek in the woods',
-    title: 'New Creek Footbridge',
-    caption: 'Recently constructed wooden bridge providing safe crossing across the stream'
+    title: 'New footbridge',
+    caption: 'The new wooden bridge over the creek'
   },
   {
     src: '/images/photo-3.jpg',
     alt: 'Dirt path leading through trees toward an open grassy field',
-    title: 'Path to the Open Field',
-    caption: 'Scenic trail connecting the woodland areas to the future multi-use field'
+    title: 'Path to the field',
+    caption: 'The trail from the woods out to the open field'
   },
   {
     src: '/images/photo-4.jpg',
     alt: 'Two volunteers working to clean out creek bed drainage',
-    title: 'Community Volunteer Work',
-    caption: 'Neighbors getting hands-on to clear brush and repair trail drainage'
+    title: 'Volunteer work',
+    caption: 'Neighbors clearing brush and fixing trail drainage'
   },
   {
     src: '/images/photo-5.jpg',
     alt: 'Wooded trail marked with pink flags winding through ivy-covered trees',
-    title: 'Trail Marking & Ivy Clearing',
-    caption: 'Trail blazes marking newly cleared paths through mature hardwoods'
+    title: 'Marking the trail',
+    caption: 'Flags marking a newly cleared section of trail'
   },
   {
     src: '/images/photo-6.jpg',
     alt: 'Rocky creek bed with historic stone culvert and dog exploring',
-    title: 'Historic Stone Culvert & Creek',
-    caption: 'Natural stream corridor running past the historic stone culvert'
+    title: 'Creek and stone culvert',
+    caption: 'The creek running past the old stone culvert'
   },
   {
     src: '/images/photo-7.jpg',
     alt: 'Wooded dirt trail leading toward neighborhood homes with dog walking',
-    title: 'Dog-Friendly Walking Trails',
-    caption: 'Shaded dirt trails connecting Woodmont neighborhoods and green space'
+    title: 'Walking the dog',
+    caption: 'A dirt trail leading back toward the neighborhood'
   },
   {
     src: '/images/photo-8.jpg',
     alt: 'Sunlit grassy field surrounded by dense green forest with dog',
-    title: 'Sunlit Community Meadow',
-    caption: 'Open field area planned for community gatherings and sports'
+    title: 'The open field',
+    caption: 'The field beyond the tennis courts'
   }
 ]
 
