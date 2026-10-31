@@ -48,9 +48,9 @@ const defaultPhotos: PhotoItem[] = [
   },
   {
     src: '/images/photo-6.jpg',
-    alt: 'Rocky creek bed with historic stone culvert and dog exploring',
-    title: 'Creek and stone culvert',
-    caption: 'The creek running past the old stone culvert'
+    alt: 'Rocky creek bed leading to the railroad trestle, with a dog exploring',
+    title: 'Creek by the train trestle',
+    caption: 'The creek where it runs under the railroad tracks'
   },
   {
     src: '/images/photo-7.jpg',
