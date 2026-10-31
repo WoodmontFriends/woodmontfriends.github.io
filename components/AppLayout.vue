@@ -39,7 +39,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
           <NuxtLink class="header-link" to="/projects">Projects</NuxtLink>
           <NuxtLink class="header-link" to="/nature">Nature map</NuxtLink>
           <NuxtLink class="header-link" to="/explore">Explore in 3D</NuxtLink>
-          <NuxtLink class="header-link" to="/board">Board portal</NuxtLink>
+          <NuxtLink class="header-link" to="/board">Our board</NuxtLink>
           <a class="header-link" :href="signupUrl" target="_blank" rel="noopener noreferrer">Get updates</a>
         </nav>
       </div>
@@ -62,7 +62,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
           </p>
           <p><EmailAddress /></p>
           <p><NuxtLink to="/projects">See what we're working on</NuxtLink></p>
-          <p><NuxtLink to="/board">Board portal sign-in</NuxtLink></p>
+          <p><NuxtLink to="/board#portal">Board portal sign-in</NuxtLink></p>
         </div>
         <div class="footer-partners">
           <h2 class="footer-heading">Community partners</h2>
