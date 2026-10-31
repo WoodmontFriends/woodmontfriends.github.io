@@ -3,7 +3,7 @@
 Website and project space for **Friends of Woodmont Park (FWP)**, a Virginia nonstock corporation (incorporated April 22, 2026) serving the Woodmont neighborhood and surrounding area of North Chesterfield, VA. Markdown-driven static site (Nuxt 3) deployed to GitHub Pages via Actions.
 
 - **Live**: https://woodmontfriends.org (also woodmontfriends.github.io) · **GitHub org**: https://github.com/WoodmontFriends
-- **501(c)(3) status**: applied / pending — do NOT describe donations as tax-deductible until confirmed.
+- **501(c)(3) status**: approved by the IRS (determination letter received Oct 2026). Donations are tax-deductible "to the extent allowed by law"; use that phrasing in public copy.
 
 ## Mission (verbatim from the Articles of Incorporation)
 
@@ -31,7 +31,7 @@ Restore the old tennis courts behind the WRA pool into a **multi-use sport court
 
 - Volunteers (cleanup days, trail work, events)
 - Grant writers / fundraising help
-- Donations (post-501(c)(3)) and in-kind contributions (tools, materials, equipment, expertise)
+- Donations (tax-deductible) and in-kind contributions (tools, materials, equipment, expertise)
 - Community input on what the space should become
 
 ## Stack & deploy
@@ -58,6 +58,7 @@ yarn generate   # static build → ./dist
   - `::event-list` > `::event-item{month day weekday title}` — date-block events.
   - `::trail` > `::trail-stop{title}` — the phased plan, drawn as a trail with blaze markers. Only for content that really is a sequence.
   - `::help-list` > `::help-item{title}` — two-column list of ways to help.
+  - `::board-list{title}` > `::board-member{name role photo}` — the board in the "Who we are" section. `photo` (a path in `public/`) and a bio in the body are optional; members show by first name until the board agrees otherwise.
   - `::contact-band{title}` — dark sign-up call-to-action, plus the email address with a Copy button (`components/EmailAddress.vue`; mailto alone does nothing on computers without a mail app) and the community calendar subscribe links.
   - `::calendar-callout{title}` — dark "add our calendar" card with Google and Apple/Outlook subscribe buttons for the public FWP Community Events calendar (`communityCalendarId` in `app.config.ts`, links built in `composables/useCommunityCalendar.ts`); body is optional copy. Used on the home page and `/projects`.
 - Sign-ups go to a Google Form (`signupUrl` in `app.config.ts`) stored in the FWP Board Internal shared drive: name, email, volunteer interests, and a free-text note.

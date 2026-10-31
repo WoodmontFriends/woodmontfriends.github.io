@@ -6,7 +6,7 @@ Website for **Friends of Woodmont Park**, a new community nonprofit serving the 
 
 ## About the organization
 
-Friends of Woodmont Park is a Virginia nonstock corporation whose mission is to preserve, protect, and promote the quality of life for all residents in the Woodmont neighborhood and surrounding area through sustainable improvements and collective community effort. 501(c)(3) tax-exempt status is pending.
+Friends of Woodmont Park is a Virginia nonstock corporation whose mission is to preserve, protect, and promote the quality of life for all residents in the Woodmont neighborhood and surrounding area through sustainable improvements and collective community effort. It is a 501(c)(3) tax-exempt organization.
 
 Our first project is restoring the old tennis courts behind the Woodmont Recreation Association pool into a multi-use community sport court.
 
