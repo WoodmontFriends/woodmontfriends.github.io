@@ -84,6 +84,10 @@ All of these are exported from the Blender model in the FWP Board Internal drive
 
 `components/content/FwpProjects.vue` (`::fwp-projects`) fetches `publicBoardUrl` in `app.config.ts` (`https://admin.woodmontfriends.org/api/public/board`) in the browser, so board changes show without a rebuild. The admin app (private repo `fwp-admin`) is the single source of truth: a card appears here only when it has the `public` label, and only its title, column (Planned / In progress / Recently done), target month and topic chips leave the app. Finished cards older than 60 days come back as `archive` and show in a collapsed list. `components/content/FwpEvents.vue` (`::fwp-events`) lists upcoming events from `publicEventsUrl` (the public "FWP Community Events" Google Calendar, fed by public cards with a due date) with subscribe links; it renders nothing while the admin app reports the calendar off. The header, footer, home page and board page all link here; the old GitHub Projects board is retired.
 
+## Donate page (`/donate`)
+
+`content/6.donate.md`: online giving through Zeffy plus pay-by-check details. `components/content/ZeffyForm.vue` (`::zeffy-form`) loads Zeffy's embed script in the browser for the form set by `zeffyFormSlug` in `app.config.ts`, and falls back to Zeffy's plain iframe if the script can't load. The header has a yellow Donate button, and the home page's "Donate" item links here. The check address is FWP's official mailing address (2334 Traymore Rd, per the IRS determination letter).
+
 ## Google Drive (private)
 
 `FWP Board Internal` shared drive, mounted locally at:

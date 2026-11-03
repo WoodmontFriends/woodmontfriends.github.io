@@ -41,6 +41,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
           <NuxtLink class="header-link" to="/explore">Explore in 3D</NuxtLink>
           <NuxtLink class="header-link" to="/board">Our board</NuxtLink>
           <a class="header-link" :href="signupUrl" target="_blank" rel="noopener noreferrer">Get updates</a>
+          <NuxtLink class="header-link header-donate" to="/donate">Donate</NuxtLink>
         </nav>
       </div>
     </header>
@@ -127,6 +128,16 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
   font-size: 0.95rem;
   white-space: nowrap;
 }
+.header-donate {
+  padding: 0.3rem 0.85rem;
+  border-radius: 4px;
+  background: var(--blaze);
+  color: var(--hemlock-deep);
+  text-decoration: none;
+}
+.header-donate:hover {
+  background: var(--blaze-hover);
+}
 .menu-toggle {
   display: none;
 }
@@ -195,6 +206,13 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
     text-decoration: none;
   }
   .header-link.router-link-active {
+    color: var(--blaze);
+  }
+  /* In the phone menu, Donate is a regular row in blaze yellow. */
+  .header-donate {
+    padding: 0;
+    border-radius: 0;
+    background: none;
     color: var(--blaze);
   }
 }
