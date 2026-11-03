@@ -29,6 +29,9 @@ onMounted(() => {
 
 <style scoped>
 .zeffy {
+  /* Zeffy's script sets the form to max-width 600px with auto margins, which centers it in a wide
+     column. Capping our box at the same width keeps it lined up with the text above. */
+  max-width: 600px;
   margin-top: 1.5rem;
 }
 .zeffy-frame {
