@@ -53,7 +53,7 @@ yarn generate   # static build → ./dist
 ## Editing content
 
 - Home page: `content/1.index.md` — frontmatter `navigation.title` / `layout` / `title` / `description` (WCA conventions). Each band of the page is an MDC component, so copy edits stay in Markdown:
-  - `::park-hero{primary-label primary-href secondary-label secondary-href}` — dark hero with the name lockup; body is the tagline. An href of `signup` resolves to `signupUrl` in `app.config.ts`. Optional `link-label`/`link-href` add a quiet text link under the buttons (the home page uses it for `#calendar`).
+  - `::park-hero{primary-label primary-href secondary-label secondary-href}` — dark hero with the name lockup; body is the tagline. An href of `signup` resolves to `signupUrl` in `app.config.ts`. Optional `link-label`/`link-href` add a quiet text link under the buttons (the home page uses it for `#calendar`). Optional `image`/`image-alt`/`image-caption` put a photo beside the text on screens 900px and wider (below it on phones) so the hero fits a laptop screen with the next section showing. The body can hold several paragraphs: the first is a short tagline (set in the heading font), later ones are softer welcome text.
   - `::page-section{id title tone="paper|fern"}` — a titled section; optional `#aside` slot for a right-hand column (used for `::mission-quote` and the compact calendar card on `/projects`) and `#full` slot for full-width content below both columns (the projects board).
   - `::event-list` > `::event-item{month day weekday title}` — date-block events.
   - `::trail` > `::trail-stop{title}` — the phased plan, drawn as a trail with blaze markers. Only for content that really is a sequence.
