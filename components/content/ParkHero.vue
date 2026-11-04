@@ -143,7 +143,10 @@ const isExternal = (href?: string) => Boolean(href && (href === signupUrl || hre
   max-width: none;
 }
 .tagline :deep(p:first-child) {
-  font-size: 1.15em;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2.6vw, 1.9rem);
+  font-weight: 500;
+  line-height: 1.25;
   color: var(--on-dark);
 }
 .tagline :deep(p + p) {
