@@ -7,6 +7,10 @@ const props = defineProps({
   // Optional quiet text link under the buttons, e.g. to the calendar call-out (#calendar).
   linkLabel: { type: String, default: '' },
   linkHref: { type: String, default: '' },
+  // Optional photo beside the text on wide screens (below it on phones). Path in public/.
+  image: { type: String, default: '' },
+  imageAlt: { type: String, default: '' },
+  imageCaption: { type: String, default: '' },
 })
 // "signup" resolves to the sign-up form URL in app.config.ts
 const { signupUrl } = useAppConfig()
@@ -18,12 +22,13 @@ const isExternal = (href?: string) => Boolean(href && (href === signupUrl || hre
 
 <template>
   <section class="hero on-dark">
-    <div class="wrap">
+    <div class="wrap hero-grid" :class="{ 'has-image': image }">
+      <div class="hero-text">
       <h1 class="lockup">
         <span class="lockup-small">Friends of</span>
         <span class="lockup-big">Woodmont Park</span>
       </h1>
-      <p class="tagline"><ContentSlot :use="$slots.default" unwrap="p" /></p>
+      <div class="tagline"><ContentSlot :use="$slots.default" /></div>
       <div v-if="primaryLabel || secondaryLabel" class="actions">
         <a 
           v-if="primaryLabel" 
@@ -49,6 +54,11 @@ const isExternal = (href?: string) => Boolean(href && (href === signupUrl || hre
           {{ linkLabel }}
         </a>
       </p>
+      </div>
+      <figure v-if="image" class="hero-photo">
+        <img :src="image" :alt="imageAlt" width="1024" height="768" fetchpriority="high" />
+        <figcaption v-if="imageCaption">{{ imageCaption }}</figcaption>
+      </figure>
     </div>
   </section>
 </template>
@@ -70,7 +80,38 @@ const isExternal = (href?: string) => Boolean(href && (href === signupUrl || hre
 .hero {
   background: var(--hemlock);
   color: var(--on-dark);
-  padding: clamp(2.5rem, 7vw, 5rem) 0 clamp(3rem, 8vw, 5.5rem);
+  padding: clamp(2rem, 4.5vw, 3.25rem) 0 clamp(2.5rem, 5vw, 3.5rem);
+}
+.hero-grid {
+  display: grid;
+  gap: 2.25rem;
+}
+@media (min-width: 900px) {
+  .hero-grid.has-image {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: clamp(2.5rem, 4vw, 4rem);
+    align-items: center;
+  }
+  .has-image .lockup-big {
+    font-size: clamp(3rem, 4.9vw, 4.5rem);
+  }
+}
+.hero-photo {
+  margin: 0;
+}
+.hero-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.55);
+}
+.hero-photo figcaption {
+  margin-top: 0.6rem;
+  font-size: 0.9rem;
+  color: var(--on-dark-soft);
 }
 .lockup {
   margin: 0;
@@ -91,16 +132,27 @@ const isExternal = (href?: string) => Boolean(href && (href === signupUrl || hre
   letter-spacing: -0.015em;
 }
 .tagline {
-  margin: 1.5rem 0 0;
+  margin: 1.25rem 0 0;
   max-width: 34rem;
-  font-size: clamp(1.1rem, 2.4vw, 1.3rem);
+  font-size: clamp(1.05rem, 2vw, 1.2rem);
   line-height: 1.55;
   color: var(--on-dark-soft);
+}
+.tagline :deep(p) {
+  margin: 0;
+  max-width: none;
+}
+.tagline :deep(p:first-child) {
+  font-size: 1.15em;
+  color: var(--on-dark);
+}
+.tagline :deep(p + p) {
+  margin-top: 0.85rem;
 }
 .actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
-  margin-top: 2rem;
+  margin-top: 1.75rem;
 }
 </style>
