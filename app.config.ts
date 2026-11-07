@@ -2,8 +2,8 @@ export default defineAppConfig({
   // Configure Content Wind here
   cover: '/favicon.svg',
   email: 'info@woodmontfriends.org',
-  // Google Form in the FWP Board Internal shared drive ("FWP Sign-ups (website + Fall Fest)")
-  signupUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSfnm6BANJCPeBfbAIajsnJIINk3fJl5o6F-wxD9--0qofDM4Q/viewform',
+  // The volunteer sign-up in the admin app (fwp-admin app/join). The board reviews sign-ups there.
+  signupUrl: 'https://admin.woodmontfriends.org/join',
   // Public projects feed from the admin app: cards labelled "public" (fwp-admin lib/public-board.ts)
   publicBoardUrl: 'https://admin.woodmontfriends.org/api/public/board',
   // Upcoming events on the public "FWP Community Events" Google Calendar, from the admin app
