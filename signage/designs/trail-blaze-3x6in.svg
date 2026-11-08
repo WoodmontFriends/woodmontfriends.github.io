@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3in" height="6in" viewBox="0 0 300 600">
+<title>Trail blaze marker: proof, not a cut file</title>
+<rect id="stock" width="300" height="600" rx="15" fill="#1f3a2e"/>
+<circle class="mounting-hole" cx="150" cy="35" r="16" fill="#8b8374"/>
+<circle class="mounting-hole" cx="150" cy="565" r="16" fill="#8b8374"/>
+<path id="blaze" fill="#f2c230" fill-rule="nonzero" d="M90 70H210C221.05 70 230 78.95 230 90V510C230 521.05 221.05 530 210 530H90C78.95 530 70 521.05 70 510V90C70 78.95 78.95 70 90 70Z"/>
+</svg>
