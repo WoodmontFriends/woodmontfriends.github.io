@@ -1,0 +1,37 @@
+# Dependency updates. Weekly and grouped: one PR for every minor and patch bump.
+# Security updates come as they're published and skip the cooldown.
+#
+# cooldown: wait a week after a release before proposing it, so a bad or hijacked release is
+# usually caught and pulled first.
+version: 2
+updates:
+  - package-ecosystem: npm   # covers yarn.lock
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 7
+    groups:
+      minor-and-patch:
+        update-types: [minor, patch]
+    ignore:
+      # These move together in the Nuxt 4 + Content 3 upgrade (issue #39), not one at a time.
+      - dependency-name: nuxt
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@nuxt/content"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: content-wind
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    cooldown:
+      default-days: 7
+    groups:
+      actions:
+        patterns: ["*"]
