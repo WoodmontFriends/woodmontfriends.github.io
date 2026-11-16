@@ -1,6 +1,9 @@
 # Dependency updates. Weekly and grouped: one PR for every minor and patch bump.
 # Security updates come as they're published and skip the cooldown.
 #
+# dependabot-merge.yml merges minor and patch updates once the build passes. Majors, and 0.x minor
+# bumps, stay open for a person.
+#
 # cooldown: wait a week after a release before proposing it, so a bad or hijacked release is
 # usually caught and pulled first.
 version: 2
@@ -16,6 +19,10 @@ updates:
     groups:
       minor-and-patch:
         update-types: [minor, patch]
+        # Pinned 0.x packages whose "minor" can break what a build doesn't test: three draws the
+        # 3D park on /explore, leaflet.heat the heat layer on the nature map. Each comes as its own
+        # PR, and dependabot-merge.yml leaves 0.x minors for a person to check the page.
+        exclude-patterns: [three, leaflet.heat]
     ignore:
       # These move together in the Nuxt 4 + Content 3 upgrade (issue #39), not one at a time.
       - dependency-name: nuxt
@@ -23,6 +30,9 @@ updates:
       - dependency-name: "@nuxt/content"
         update-types: ["version-update:semver-major"]
       - dependency-name: content-wind
+        update-types: ["version-update:semver-major"]
+      # nuxt-gtag 5 needs Nuxt 4: part of #39 too.
+      - dependency-name: nuxt-gtag
         update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
@@ -33,5 +43,7 @@ updates:
     cooldown:
       default-days: 7
     groups:
+      # Minor and patch only, so the group can be merged by itself. A major comes as its own PR.
       actions:
         patterns: ["*"]
+        update-types: [minor, patch]

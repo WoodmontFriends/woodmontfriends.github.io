@@ -12,9 +12,12 @@ permissions:
   pages: write
   id-token: write
 
+# Deploys share the "pages" queue, and one in progress is never interrupted. Pull requests only build, so each
+# gets its own queue (a newer push replaces its run). Sharing "pages" with them let one queued run
+# cancel another: GitHub keeps only one waiting run per group.
 concurrency:
-  group: "pages"
-  cancel-in-progress: false
+  group: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.ref) || 'pages' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build:

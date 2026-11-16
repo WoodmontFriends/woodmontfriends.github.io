@@ -1,0 +1,73 @@
+name: dependabot merge
+
+# Merges Dependabot's minor and patch updates once their checks have passed. Majors, and 0.x
+# minor bumps (which may break), stay open for a person. The other FWP repo has the same workflow
+# (fwp-admin and woodmontfriends.github.io): keep the two in step.
+#
+# Runs after the build finishes. Branch protection needs one approving review, so this approves
+# the PR first (the repo setting "Allow GitHub Actions to create and approve pull requests" is on
+# for this).
+#
+# It never checks out or runs the pull request's code: it only reads the PR and merges it.
+# A merge made with this workflow's token doesn't trigger other workflows, so it starts the
+# Pages build on main itself, which deploys the site as for any merge.
+on:
+  workflow_run:
+    workflows: ["Deploy Nuxt site to Pages"]
+    types: [completed]
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+concurrency:
+  group: dependabot-merge
+  cancel-in-progress: false
+
+jobs:
+  merge:
+    if: >-
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.actor.login == 'dependabot[bot]' &&
+      github.event.workflow_run.head_repository.full_name == github.repository &&
+      startsWith(github.event.workflow_run.head_branch, 'dependabot/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v9
+        with:
+          script: |
+            // Is every bump this Dependabot PR lists a minor or patch? A single PR names its bump in the
+            // title; a grouped one ("Bump the ... group") lists each as "Updates `pkg` from X to Y" in the
+            // body. A 0.x package's minor counts as major (0.34 -> 0.35 may break).
+            function minorOrPatch(pr) {
+              const pairs = [];
+              if (pr.title.startsWith('Bump the ')) {
+                for (const m of (pr.body || '').matchAll(/^Updates `[^`]+` from (\S+) to (\S+)/gm)) pairs.push([m[1], m[2]]);
+              } else {
+                const m = pr.title.match(/^Bump \S+ from (\S+) to (\S+)/);
+                if (m) pairs.push([m[1], m[2]]);
+              }
+              const ver = (v) => v.match(/^v?(\d+)(?:\.(\d+))?/);
+              const ok = pairs.length > 0 && pairs.every(([from, to]) => {
+                const a = ver(from), b = ver(to);
+                return a && b && a[1] === b[1] && (a[1] !== '0' || a[2] === b[2]);
+              });
+              return { ok, pairs };
+            }
+
+            const run = context.payload.workflow_run;
+            const { owner, repo } = context.repo;
+            const { data: open } = await github.rest.pulls.list({ owner, repo, state: 'open', head: `${owner}:${run.head_branch}` });
+            const pr = open.find((p) => p.user.login === 'dependabot[bot]');
+            if (!pr) return core.info(`No open Dependabot PR for ${run.head_branch}`);
+            // Only the commit that just passed, not a newer push.
+            if (pr.head.sha !== run.head_sha) return core.info(`#${pr.number} has a newer commit; its own run decides`);
+            const { ok, pairs } = minorOrPatch(pr);
+            core.info(`#${pr.number} "${pr.title}": ${JSON.stringify(pairs)} -> ${ok ? 'merge' : 'leave for a person'}`);
+            if (!ok) return;
+            await github.rest.pulls.createReview({ owner, repo, pull_number: pr.number, event: 'APPROVE', body: 'Minor or patch update; the build passed. Merged by dependabot-merge.yml.' });
+            await github.rest.pulls.merge({ owner, repo, pull_number: pr.number, merge_method: 'merge', sha: run.head_sha });
+            await github.rest.actions.createWorkflowDispatch({ owner, repo, workflow_id: 'nuxtjs.yml', ref: 'main' });
+            core.notice(`Merged #${pr.number}`);
