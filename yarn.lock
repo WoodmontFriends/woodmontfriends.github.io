@@ -4107,10 +4107,12 @@ lazystream@^1.0.0:
   dependencies:
     readable-stream "^2.0.5"
 
-leaflet.heat@0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/leaflet.heat/-/leaflet.heat-0.2.0.tgz#109d8cf586f0adee41f05aff031e27a77fecc229"
-  integrity sha512-Cd5PbAA/rX3X3XKxfDoUGi9qp78FyhWYurFg3nsfhntcM/MCNK08pRkf4iEenO1KNqwVPKCmkyktjW3UD+h9bQ==
+leaflet.heat@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/leaflet.heat/-/leaflet.heat-1.0.0.tgz#26416dbdd03d6141dddacc7aabdd56218acafd9c"
+  integrity sha512-sjEmSRlT6XdrftqVkS/+bS+bM36Px4QsZhDlgABY3udZobCs+6VRYvWyhMloznr6dBk9sDbR4ZDuWcLoakwSDg==
+  dependencies:
+    simpleheat "^1.0.0"
 
 leaflet@1.9.4:
   version "1.9.4"
@@ -6249,6 +6251,11 @@ signal-exit@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-4.1.0.tgz#952188c1cbd546070e2dd20d0f41c0ae0530cb04"
   integrity sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==
+
+simpleheat@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/simpleheat/-/simpleheat-1.0.0.tgz#300f98011d71931e21c789efea1ea25eca26a8ce"
+  integrity sha512-hCGl1lj+IR+CymAouYf5ZQ7NguSQq+w1PWu1WvHgZWkdzmyS/xbN1T2TpwlSC8nEDDK2JRVPcdgV0a6652aP2Q==
 
 sirv@^3.0.2:
   version "3.0.2"
