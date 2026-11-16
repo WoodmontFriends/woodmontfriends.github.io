@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3in" height="6in" viewBox="0 0 300 600" data-vinyl="yellow">
+<!-- UNTESTED: this cut file has not been run on a real vinyl cutter. Do a small test cut first and check the size against a ruler. -->
+<title>trail-blaze: yellow vinyl at full size. UNTESTED on a real cutter.</title>
+<path id="blaze" fill="#000" fill-rule="nonzero" d="M90 70H210C221.05 70 230 78.95 230 90V510C230 521.05 221.05 530 210 530H90C78.95 530 70 521.05 70 510V90C70 78.95 78.95 70 90 70Z"/>
+</svg>

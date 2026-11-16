@@ -1,0 +1,48 @@
+{
+  "run": {
+    "trailhead": 1,
+    "workday-yard": 2,
+    "trail-blaze": 6,
+    "trail-arrow-footbridge": 2,
+    "trail-arrow-old-courts": 2
+  },
+  "colors": {
+    "pale": {
+      "pieces": 28,
+      "measured_sq_in": 99.1,
+      "piece_bbox_sq_in": 306.9,
+      "length_in_12in": 40.9,
+      "longest_piece_in_12in": 14.2,
+      "length_in_24in": 22.8,
+      "longest_piece_in_24in": 14.2
+    },
+    "yellow": {
+      "pieces": 14,
+      "measured_sq_in": 114.0,
+      "piece_bbox_sq_in": 196.3,
+      "length_in_12in": 28.1,
+      "longest_piece_in_12in": 14.1,
+      "length_in_24in": 14.1,
+      "longest_piece_in_24in": 14.1
+    }
+  },
+  "per_sign": {
+    "trailhead": {
+      "yellow": 9.8,
+      "pale": 27.2
+    },
+    "workday-yard": {
+      "yellow": 30.1,
+      "pale": 22.4
+    },
+    "trail-blaze": {
+      "yellow": 7.3
+    },
+    "trail-arrow-footbridge": {
+      "pale": 5.0
+    },
+    "trail-arrow-old-courts": {
+      "pale": 4.4
+    }
+  }
+}
